@@ -1,0 +1,37 @@
+\documentclass[english,12pt]{scrreprt}
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+%\usepackage[ngerman,main=english]{babel} 
+\usepackage[utf8]{inputenc}
+
+\usepackage[usenames,dvipsnames,svgnames, table]{xcolor}
+\usepackage{graphicx}
+\usepackage{csquotes}
+\usepackage{subfiles}
+\usepackage[pdfdisplaydoctitle,menucolor=orange!40!black,filecolor=magenta!40!black,urlcolor=blue!40!black,linkcolor=red!40!black,citecolor=green!40!black,colorlinks]{hyperref}
+\usepackage[sort&compress,nameinlink,noabbrev]{cleveref}
+
+\begin{document}
+
+\title{FaaSterMetrics}
+\subtitle{An Application-oriented Function as a Service Benchmarking Framework}
+\author{Luk Burchard \and Carsten Schubert \and Christoph Witzko \and Max Zhao \and Emily Dietrich %
+\thanks{~Special thanks to Prof.\@ Dr.\@ David Bermbach and Martin Grambow for project supervision}}
+\date{August 17, 2020}
+\maketitle
+
+\renewcommand*\contentsname{Structure}
+\tableofcontents
+\listoffigures
+\newpage
+
+\subfile{intro/sub.tex}
+
+\chapter{Design Principles}\label{chap:DesignPrinciples}
+
+\subfile{frameworkStructure/sub.tex}
+
+\subfile{experimentStructure/sub.tex}
+
+\end{document}
