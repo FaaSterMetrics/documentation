@@ -29,7 +29,9 @@
 *.synctex.gz
 *.pdf
 *.fls
+*.pyg
 *latexmk
+_minted-main/
 
 *.swp
 *~

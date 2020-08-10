@@ -5,26 +5,45 @@
 
 One of the main advantages of this framework is that you are able to write a function once 
 and then deploy it to any supported platform without additional modification afterwards.
-To this end, Node.js and its module semantics are used. A typical function can look like this:
+To this end, Node.js and its module semantics are used. A typical function may look like this:
 
-\begin{minted}[frame=single]{js}
+\begin{tcolorbox}
+\begin{minted}{js}
   const lib = require('@faastermetrics/lib')
   module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
     return {result: 'Hello World'}
   })
 \end{minted}
+\end{tcolorbox}
 
-As can be seen, our FaaSterMetrics library is used universally across the project. We also wrote an asynchronous JavaScript function that returns a JavaScript object with a ‘Hello World’ string. This function is passed to the so-called ‘rpcHandler’ which then gets exported. 
+As can be seen, our FaaSterMetrics library is used universally across the project. 
+We also wrote an asynchronous JavaScript function that returns a JavaScript object with a \mintinline{js}{'Hello World'} string. 
+This function is passed to the so-called `rpcHandler' which then gets exported. 
 
 \subsection{Function Naming Convention}
 
-Index js
-Of course requiring other modules/ files possible
+Each FaaS function of an experiment should be found in a file named index.js which has its own directory within the experiment's functions folder.
+Thus, the path to the function code will somehow end as follows (see also -TODO: redacted-):
+
+\begin{tcolorbox}
+  /experiments/<experiment\_name>/functions/<function\_name>/index.js
+\end{tcolorbox}
+
+Of course, it is possible to create additional files or directories within this structure in order to use them in your JavaScript code.
+For instance, Node.js module semantics could be used as shown in \Cref{fig:dividingDataAndFunctionCodeNodeJS}.
+
+\begin{figure}
+\begin{center}
+\end{center}
+\caption{Using Node.js module semantics to store some data and a function operating on it in separate files.}
+\label{fig:dividingDataAndFunctionCodeNodeJS}
+\end{figure}
 
 \subsection{Function Wrapper}
 koa.js (footnote)
 
-`rpcHandler'
+\subsubsection{`rpcHandler'}%
+\label{ssub:rpcHandler}
 Main function handler, used nearly everywhere, true to FaaS paradigm
 What are event, ctx
 

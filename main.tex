@@ -7,10 +7,16 @@
 
 \usepackage[usenames,dvipsnames,svgnames, table]{xcolor}
 \usepackage{graphicx}
-\usepackage{csquotes}
 \usepackage{subfiles}
 \usepackage[pdfdisplaydoctitle,menucolor=orange!40!black,filecolor=magenta!40!black,urlcolor=blue!40!black,linkcolor=red!40!black,citecolor=green!40!black,colorlinks]{hyperref}
 \usepackage[sort&compress,nameinlink,noabbrev]{cleveref}
+
+% Code highlighting. Needs Pygments (Python2) installed.
+\usepackage[chapter]{minted}
+\usemintedstyle{rainbow_dash}
+\usepackage{tcolorbox}
+
+\usepackage{csquotes}
 
 \begin{document}
 
@@ -34,4 +40,5 @@
 
 \subfile{experimentStructure/sub.tex}
 
+\subfile{usageGuide/jsFunctions.tex}
 \end{document}
