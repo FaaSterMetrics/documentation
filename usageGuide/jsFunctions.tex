@@ -23,19 +23,44 @@ This function is passed to the so-called `rpcHandler' which then gets exported.
 \subsection{Function Naming Convention}
 
 Each FaaS function of an experiment should be found in a file named index.js which has its own directory within the experiment's functions folder.
-Thus, the path to the function code will somehow end as follows (see also -TODO: redacted-):
+Thus, the path to the function code will somehow end as follows (see also -TODO:\@ redacted-):
 
 \begin{tcolorbox}
-  /experiments/<experiment\_name>/functions/<function\_name>/index.js
+  \texttt{/experiments/<experiment\_name>/functions/<function\_name>/index.js}
 \end{tcolorbox}
 
 Of course, it is possible to create additional files or directories within this structure in order to use them in your JavaScript code.
-For instance, Node.js module semantics could be used as shown in \Cref{fig:dividingDataAndFunctionCodeNodeJS}.
+This can e.g.\@ be useful to structure code, but also if some functions or data sets shall be used across different FaaS functions.
+In any case, we suggest to utilize Node.js module semantics as shown in \Cref{fig:dividingDataAndFunctionCodeNodeJS}.
 
 \begin{figure}
-\begin{center}
-\end{center}
-\caption{Using Node.js module semantics to store some data and a function operating on it in separate files.}
+\begin{tcolorbox}
+  \begin{tcolorbox}[enhanced, title={\texttt{[\ldots]/exampleFunction/data.js}}, attach boxed title to bottom left]
+  \begin{minted}{js}
+  const prices = {
+    umbrella: 20,
+    coat: 60,
+    flowerPot: 5
+  }
+
+  module.exports = { prices }
+  \end{minted}
+  \end{tcolorbox}
+
+  \begin{tcolorbox}[enhanced, title=\texttt{{[\ldots]/exampleFunction/index.js}}, attach boxed title to bottom left]
+  \begin{minted}{js}
+  const { prices } = require('./data')
+  const lib = require('@faastermetrics/lib')
+
+  module.exports = lib.serverless.rpcHandler(async _ => {
+    const totalCost = Object.values(prices).reduce((a,b) => a+b)
+    return { totalCost }
+  })
+  \end{minted}
+  \end{tcolorbox}
+
+\end{tcolorbox}
+\caption{Using Node.js module semantics to split some data and a function using it into separate files.}%
 \label{fig:dividingDataAndFunctionCodeNodeJS}
 \end{figure}
 
