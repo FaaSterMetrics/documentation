@@ -39,7 +39,7 @@ In such cases, we suggest to utilize Node.js module semantics as shown in \Cref{
 
 \begin{figure}
 \begin{tcolorbox}[left=3mm, right=3mm, top=3mm]
-  \begin{tcolorbox}[enhanced, title={\texttt{[\ldots]/exampleFunction/data.js}}, attach boxed title to bottom left, boxed title style={sharp corners}]
+  \begin{tcolorbox}[titleDetachedStyle, title=\texttt{{[\ldots]/exampleFunction/data.js}}]
   \begin{minted}{js}
   const prices = {
     umbrella: 20,
@@ -51,7 +51,7 @@ In such cases, we suggest to utilize Node.js module semantics as shown in \Cref{
   \end{minted}
   \end{tcolorbox}
 
-  \begin{tcolorbox}[enhanced, title=\texttt{{[\ldots]/exampleFunction/index.js}}, attach boxed title to bottom left, boxed title style={sharp corners}]
+  \begin{tcolorbox}[titleDetachedStyle, title=\texttt{{[\ldots]/exampleFunction/index.js}}]
   \begin{minted}{js}
   const { prices } = require('./data')
   const lib = require('@faastermetrics/lib')
@@ -104,6 +104,8 @@ While this does allow you to use the full functionality of a \texttt{koa router}
 it also adds an often unneeded layer of complexity.
 \footnotetext{See \url{https://github.com/ZijianHe/koa-router} in specific as well as
 \url{https://koajs.com} in general for information on koa routers.}
+
+- more formats than json
 
 TODO
 

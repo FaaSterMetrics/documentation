@@ -16,7 +16,19 @@
 \usemintedstyle{rainbow_dash}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins}
-\tcbset{sharp corners, left=1mm, right=1mm}
+\tcbset{}
+\tcbset{%
+  sharp corners, 
+  left=1mm, 
+  right=1mm,
+  %
+  titleDetachedStyle/.style={%
+    enhanced, 
+    sharp corners,
+    attach boxed title to bottom center, 
+    boxed title style={sharp corners}
+  }
+}
 
 \usepackage{csquotes}
 
