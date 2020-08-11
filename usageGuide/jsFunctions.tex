@@ -3,10 +3,11 @@
 
 \section{Writing Your Own JavaScript Functions}\label{sec:jsFunctions}
 
-One of the main advantages of this framework is that you are able to write a function once 
-and then deploy it to any supported platform without additional modification afterwards.
+One of the main advantages of this framework is the ability to write a function once 
+and then deploy it to any supported platform without modification afterwards.
 To this end, Node.js and its module semantics are used. A typical function may look like this:
 
+\begin{figure}[H]
 \begin{tcolorbox}
 \begin{minted}{js}
   const lib = require('@faastermetrics/lib')
@@ -15,23 +16,26 @@ To this end, Node.js and its module semantics are used. A typical function may l
   })
 \end{minted}
 \end{tcolorbox}
+\caption{A ``Hello World'' function in the FaaSterMetrics framework}%
+\label{fig:fmHelloWorld}
+\end{figure}
 
 As can be seen, our FaaSterMetrics library is used universally across the project. 
 We~also wrote an asynchronous JavaScript function that returns a JavaScript object with a \mintinline{js}{'Hello World'} string. 
-This function is passed to the so-called `rpcHandler' which then gets exported. 
+It takes two arguments and is then passed to a so-called `rpcHandler' which gets exported (\Cref{ssub:rpcHandler}). 
 
+\newpage{}%TODO review
 \subsection{Function Naming Convention}
 
-Each FaaS function of an experiment should be found in a file named index.js which has its own directory within the experiment's functions folder.
-Thus, the path to the function code will somehow end as follows (see also -TODO:\@ redacted-):
-
+Each FaaS function of an experiment is found in a file named index.js which has its own directory within the experiment's functions folder.
+Thus, the path to the function code should end as follows (see also -TODO:\@ redacted-):%
 \begin{tcolorbox}
   \texttt{[\ldots]/experiments/<experiment\_name>/functions/<function\_name>/index.js}
 \end{tcolorbox}
 
 Of course, it is possible to create additional files or directories within this structure in order to use them in your JavaScript code.
 This can e.g.\@ be useful to structure code, but also if some functions or data sets shall be used across different FaaS functions.
-In any case, we suggest to utilize Node.js module semantics as shown in \Cref{fig:dividingDataAndFunctionCodeNodeJS}.
+In such cases, we suggest to utilize Node.js module semantics as shown in \Cref{fig:dividingDataAndFunctionCodeNodeJS}.
 
 \begin{figure}
 \begin{tcolorbox}[left=3mm, right=3mm, top=3mm]
@@ -64,30 +68,124 @@ In any case, we suggest to utilize Node.js module semantics as shown in \Cref{fi
 \label{fig:dividingDataAndFunctionCodeNodeJS}
 \end{figure}
 
-\subsection{Function Wrapper}
-koa.js (footnote)
+\subsection{Function Wrapper}\label{sub:jsFunctionWrapper}
+
+In order to use the capabilities of our framework, user functions always have to be exported and wrapped.
+This is already depicted in the examples above where the user function is exported within our library's `rpcHandler'.
+It allows us to integrate them into our unified deployment process and to add our own control data (e.g.\@ for later analysis).
+Internally, \texttt{koajs}\footnote{\url{https://koajs.com}} is used as middleware. See -TODO:\@ redacted- for details.
 
 \subsubsection{`rpcHandler'}%
 \label{ssub:rpcHandler}
-Main function handler, used nearly everywhere, true to FaaS paradigm
-What are event, ctx
+This is the main (and usually suggested) function wrapper of the FaaSterMetrics library (`lib'), 
+accessible via \mintinline{js}{lib.serverless.rpcHandler} (see \Cref{fig:fmHelloWorld}).
+It is true to the standard FaaS paradigm, as it allows for simple functions 
+that do one single calculation and are called solely via an HTTP(S)-request.
 
-Router
-Sometimes routes needed (e.g.\@ in our Webshop frontend)
-(Ask Emily for route fix explanation)
+It is also easy to use, since it just needs to be given the asynchronous user function as parameter. 
+That user function, in turn, may use two arguments: \mintinline{js}{event} and \mintinline{js}{ctx}.
+\mintinline{js}{event} contains the payload object (which may be empty, of course), whereas \mintinline{js}{ctx} makes certain 
+library operations accessible to the user (see \Cref{sub:functionDBAccess,sub:functionCallingOther,sub:functionCustomLogs}).
+The user function is expected to return a JavaScript object
 
-\subsection{Database Access}
+The default exposed route in order to call functions wrapped by rpcHandlers is 
+\texttt{<platform\_endpoint>/<function\_name>/call}.
+See also TODO:\@ FIGURE for complete rpcHandler example.
+
+\subsubsection{`router'}%
+\label{ssub:functionRouter}
+
+Sometimes it may become necessary to get more control over internals than the rpcHandler allows.
+For instance, if you are developing some website frontend, you probably want to be able to configure multiple routes per function by yourself
+instead of relying on a single \texttt{/call} endpoint for each function.
+In such cases you can use the FaaSterMetrics library's router wrapper, 
+accessible via \mintinline{js}{lib.serverless.router}.
+While this does allow you to use the full functionality of a \texttt{koa router}\protect\footnotemark,
+it also adds an often unneeded layer of complexity.
+\footnotetext{See \url{https://github.com/ZijianHe/koa-router} in specific as well as
+\url{https://koajs.com} in general for information on koa routers.}
+
+TODO
+
+\subsection{Database Access}\label{sub:functionDBAccess}
 Redis DB for experiment
 Hosted on AWS EC2
+Supported types
 
-\subsection{Calling Other FaaS Functions}
+\subsection{Calling Other FaaS Functions}\label{sub:functionCallingOther}
 Assumption: unique name
 
 
-\subsection{Custom Log Output}
+\subsection{Custom Log Output}\label{sub:functionCustomLogs}
+timestamps etc obviously done by lib
 
-\subsection{Endpoint /call and JSON object passing}
+\subsection{Other Helper Functions}\label{sub:helperFunctions}
 
+\begin{figure}
+\begin{tcolorbox}
+\begin{minted}{js}
+  const lib = require('@faastermetrics/lib')
+  module.exports = lib.serverless.rpcHandler(
+    { db: 'redis' }, async (event, ctx) => {
+      const { a, b } = event
+  
+      // Calling other functions to do calculations
+      const square = await ctx.call('multiply', { a: a, b: a })
+      const result = await ctx.call('add', { a: square, b: b })
+  
+      // Convert result to string and store within database
+      const str = `a squared plus b is ${result}.`
+      await ctx.db.set('ID', str)
+
+      // Read out of database and create a custom log out of it
+      await ctx.log(await ctx.db.get('ID'))
+
+      return { result: str }
+    }
+  )
+\end{minted}
+\end{tcolorbox}
+\caption{%
+  A simple function showcasing all library capabilities within an rpcHandler.
+  We expect that there are two other deployed functions `add' and `multiply',
+  which return the sum and product of two numbers \mintinline{js}{a} and \mintinline{js}{b}, respectively.
+}%
+\label{fig:rpcHandlerFullFunctionalityExample}
+\end{figure}
+
+\begin{figure}
+\begin{tcolorbox}
+\begin{minted}{js}
+  const lib = require('@faastermetrics/lib')
+  module.exports = lib.serverless.router(
+    { db: 'redis' }, async router => {
+      router.post('/call', async (ctx, next) => {
+        const { a, b } = ctx.request.body
+    
+        // Calling other functions to do calculations
+        const square = await ctx.lib.call('multiply', { a: a, b: a })
+        const result = await ctx.lib.call('add', { a: square, b: b })
+   
+        // Convert result to string and store within database
+        const str = `a squared plus b is ${result}.`
+        await ctx.lib.db.set('ID', str)
+  
+        // Read out of database and create a custom log out of it
+        await ctx.lib.log(await ctx.db.get('ID'))
+  
+        ctx.type = 'application/json'
+        ctx.body = { result: str }
+      }
+    }
+  )
+\end{minted}
+\end{tcolorbox}
+\caption{%
+  The same functionality as in \Cref{fig:rpcHandlerFullFunctionalityExample}, 
+  but using the router function wrapper instead of the rpcHandler.
+}%
+\label{fig:routerFullFunctionalityExample}
+\end{figure}
 
 \end{document}
 
