@@ -17,7 +17,7 @@ To this end, Node.js and its module semantics are used. A typical function may l
 \end{tcolorbox}
 
 As can be seen, our FaaSterMetrics library is used universally across the project. 
-We also wrote an asynchronous JavaScript function that returns a JavaScript object with a \mintinline{js}{'Hello World'} string. 
+We~also wrote an asynchronous JavaScript function that returns a JavaScript object with a \mintinline{js}{'Hello World'} string. 
 This function is passed to the so-called `rpcHandler' which then gets exported. 
 
 \subsection{Function Naming Convention}
@@ -26,7 +26,7 @@ Each FaaS function of an experiment should be found in a file named index.js whi
 Thus, the path to the function code will somehow end as follows (see also -TODO:\@ redacted-):
 
 \begin{tcolorbox}
-  \texttt{/experiments/<experiment\_name>/functions/<function\_name>/index.js}
+  \texttt{[\ldots]/experiments/<experiment\_name>/functions/<function\_name>/index.js}
 \end{tcolorbox}
 
 Of course, it is possible to create additional files or directories within this structure in order to use them in your JavaScript code.
@@ -34,8 +34,8 @@ This can e.g.\@ be useful to structure code, but also if some functions or data 
 In any case, we suggest to utilize Node.js module semantics as shown in \Cref{fig:dividingDataAndFunctionCodeNodeJS}.
 
 \begin{figure}
-\begin{tcolorbox}
-  \begin{tcolorbox}[enhanced, title={\texttt{[\ldots]/exampleFunction/data.js}}, attach boxed title to bottom left]
+\begin{tcolorbox}[left=3mm, right=3mm, top=3mm]
+  \begin{tcolorbox}[enhanced, title={\texttt{[\ldots]/exampleFunction/data.js}}, attach boxed title to bottom left, boxed title style={sharp corners}]
   \begin{minted}{js}
   const prices = {
     umbrella: 20,
@@ -47,7 +47,7 @@ In any case, we suggest to utilize Node.js module semantics as shown in \Cref{fi
   \end{minted}
   \end{tcolorbox}
 
-  \begin{tcolorbox}[enhanced, title=\texttt{{[\ldots]/exampleFunction/index.js}}, attach boxed title to bottom left]
+  \begin{tcolorbox}[enhanced, title=\texttt{{[\ldots]/exampleFunction/index.js}}, attach boxed title to bottom left, boxed title style={sharp corners}]
   \begin{minted}{js}
   const { prices } = require('./data')
   const lib = require('@faastermetrics/lib')
