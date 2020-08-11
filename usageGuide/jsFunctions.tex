@@ -98,6 +98,7 @@ See also TODO:\@ FIGURE for complete rpcHandler example.
 Sometimes it may become necessary to get more control over internals than the rpcHandler allows.
 For instance, if you are developing some website frontend, you probably want to be able to configure multiple routes per function by yourself
 instead of relying on a single \texttt{/call} endpoint for each function.
+Also you may sometimes be interested in writing functions whose input or output is not just a JavaScript object (or JSON, respectively).
 In such cases you can use the FaaSterMetrics library's router wrapper, 
 accessible via \mintinline{js}{lib.serverless.router}.
 While this does allow you to use the full functionality of a \texttt{koa router}\protect\footnotemark,
@@ -105,24 +106,56 @@ it also adds an often unneeded layer of complexity.
 \footnotetext{See \url{https://github.com/ZijianHe/koa-router} in specific as well as
 \url{https://koajs.com} in general for information on koa routers.}
 
-- more formats than json
-
-TODO
-
-\subsection{Database Access}\label{sub:functionDBAccess}
-Redis DB for experiment
-Hosted on AWS EC2
-Supported types
+TODO (takes a koa router, etc)
 
 \subsection{Calling Other FaaS Functions}\label{sub:functionCallingOther}
-Assumption: unique name
 
+In order to build applications out of FaaS functions and later analyse their performance,
+it is crucial for one function to be able to call another one.
+Within the wrapped user function, this can easily be achieved via the \mintinline{js}{ctx} function parameter.
+Thereby, logs containing all kinds of relevant information about those functions and their calling process (see ---TODO:\@ redacted---)
+are generated automatically for future analysis.
+
+When an rpcHandler is used as function wrapper, other functions are simply called via
+\mintinline{js}{ctx.call('functionName', functionPayload)},
+where the used arguments represent name and event object (i.e.\@ payload) of the called function.
+Within a router, use \mintinline{js}{ctx.lib.call('functionName', functionPayload)} instead.
+Also, since functions are typically asynchronous, it may be necessary to \mintinline{js}{await} those calls.
+
+Complete examples of user functions which call other functions are shown in 
+\Cref{fig:rpcHandlerFullFunctionalityExample,fig:routerFullFunctionalityExample}.
+
+% TODO Question: can we call router functions?
+
+\subsection{Database Access}\label{sub:functionDBAccess}
+
+If you have configured a redis database for an experiment (see ---TODO:\@ redacted--- for how to do this),
+this database becomes available to a function by passing an option struct to the respective function wrapper.
+Assuming that database is called \mintinline{json}{"redis"} within the \texttt{experiment.json} config file,
+this means a JavaScript object of the form \mintinline{js}{{db: 'redis'}} has to be given to the used function wrapper
+as first argument --- additionally to the function or koa router to be wrapped, which then embodies the second argument.
+The database can then be accessed via the \mintinline{js}{ctx} argument within that function.
+
+Since redis is used, the database has the form of a string-based key-value store. 
+Thus, keys should always be simple strings. 
+Values can be strings, arrays or JavaScript objects. %TODO ask Christoph: Should all be stringified, right?
+
+Writing or updating a key-value pair from a function wrapped by an rpcHandler is done via \mintinline{js}{ctx.db.set(key, value)}
+and retrieving a value is done via \mintinline{js}{ctx.db.get(key)}.
+Whenever a router is used as function wrapper, these two instructions should be exchanged for
+\mintinline{js}{ctx.lib.db.set(key, value)} and \mintinline{js}{ctx.lib.db.get(key)}, respectively.
+Also,~since user functions are usually asynchronous, it is mostly necessary to \mintinline{js}{await} their results.
+
+Complete examples of user functions that also use a database can be seen in 
+\Cref{fig:rpcHandlerFullFunctionalityExample,fig:routerFullFunctionalityExample}.
 
 \subsection{Custom Log Output}\label{sub:functionCustomLogs}
+usually not necessary
 timestamps etc obviously done by lib
 
 \subsection{Other Helper Functions}\label{sub:helperFunctions}
 
+%TODO ask if ctx.log should be awaited
 \begin{figure}
 \begin{tcolorbox}
 \begin{minted}{js}
@@ -151,6 +184,7 @@ timestamps etc obviously done by lib
   A simple function showcasing all library capabilities within an rpcHandler.
   We expect that there are two other deployed functions `add' and `multiply',
   which return the sum and product of two numbers \mintinline{js}{a} and \mintinline{js}{b}, respectively.
+  After deployment, the function itself can trivially be called by executing the command in \Cref{fig:curlExampleCall}.
 }%
 \label{fig:rpcHandlerFullFunctionalityExample}
 \end{figure}
@@ -185,9 +219,25 @@ timestamps etc obviously done by lib
 \caption{%
   The same functionality as in \Cref{fig:rpcHandlerFullFunctionalityExample}, 
   but using the router function wrapper instead of the rpcHandler.
+  It can also be called by executing the command in \Cref{fig:curlExampleCall} 
+  after it has been deployed.
 }%
 \label{fig:routerFullFunctionalityExample}
 \end{figure}
+
+\begin{figure}
+  \begin{tcolorbox}[left=-2.0mm, top=3mm, bottom=3mm]
+  \hfuzz=5pt
+  \begin{verbatim}
+  curl --header "Content-Type: application/json" --data '{"a":10,"b":5}' 
+  <platform_endpoint>/<function_name>/call\end{verbatim}
+  \end{tcolorbox}
+  \caption{Example \texttt{curl} shell command for calling the functions of 
+  \Cref{fig:rpcHandlerFullFunctionalityExample,fig:routerFullFunctionalityExample}}
+  Of course, \texttt{<platform\_endpoint>/<function\_name>} has to be replaced according to 
+  where the function is deployed and how it is named.\label{fig:curlExampleCall}
+\end{figure}
+
 
 \end{document}
 
