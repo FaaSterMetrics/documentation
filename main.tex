@@ -8,6 +8,9 @@
 \usepackage[usenames,dvipsnames,svgnames, table]{xcolor}
 \usepackage{graphicx}
 \usepackage{subfiles}
+\makeatletter
+\newcommand\subfix[1]{\import@path#1}
+\makeatother
 \usepackage[pdfdisplaydoctitle,menucolor=orange!40!black,filecolor=magenta!40!black,urlcolor=blue!40!black,linkcolor=red!40!black,citecolor=green!40!black,colorlinks]{hyperref}
 \usepackage[sort&compress,nameinlink,noabbrev]{cleveref}
 
