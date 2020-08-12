@@ -90,23 +90,31 @@ The user function is expected to return a JavaScript object
 
 The default exposed route in order to call functions wrapped by rpcHandlers is 
 \texttt{<platform\_endpoint>/<function\_name>/call}.
-See also TODO:\@ FIGURE for complete rpcHandler example.
+See also \Cref{fig:rpcHandlerFullFunctionalityExample} for a complete rpcHandler example.
 
 \subsubsection{`router'}%
 \label{ssub:functionRouter}
 
 Sometimes it may become necessary to get more control over internals than the rpcHandler allows.
-For instance, if you are developing some website frontend, you probably want to be able to configure multiple routes per function by yourself
+For instance, if you are developing some website frontend, you probably want to be able to configure multiple HTTP routes per function by yourself
 instead of relying on a single \texttt{/call} endpoint for each function.
 Also you may sometimes be interested in writing functions whose input or output is not just a JavaScript object (or JSON, respectively).
+
 In such cases you can use the FaaSterMetrics library's router wrapper, 
 accessible via \mintinline{js}{lib.serverless.router}.
 While this does allow you to use the full functionality of a \texttt{koa router}\protect\footnotemark,
-it also adds an often unneeded layer of complexity.
+it also adds an often unneeded layer of complexity and is not meant to be used universally within an application.
 \footnotetext{See \url{https://github.com/ZijianHe/koa-router} in specific as well as
 \url{https://koajs.com} in general for information on koa routers.}
 
-TODO (takes a koa router, etc)
+As the name implies, this wrapper needs to be given an asynchronous \texttt{koa router}
+instead of a simple function as main argument.
+Thus, within your routed user functions is also a \texttt{koa} context (usually named \mintinline{js}{ctx})
+accessible. 
+In particular, a function's request object can be accessed via \mintinline{js}{ctx.request.body}
+and its response object can be written into \mintinline{js}{ctx.body}.
+
+See also \Cref{fig:routerFullFunctionalityExample} for a complete rpcHandler example.
 
 \subsection{Calling Other FaaS Functions}\label{sub:functionCallingOther}
 
@@ -125,8 +133,6 @@ Also, since functions are typically asynchronous, it may be necessary to \mintin
 Complete examples of user functions which call other functions are shown in 
 \Cref{fig:rpcHandlerFullFunctionalityExample,fig:routerFullFunctionalityExample}.
 
-% TODO Question: can we call router functions?
-
 \subsection{Database Access}\label{sub:functionDBAccess}
 
 If you have configured a redis database for an experiment (see ---TODO:\@ redacted--- for how to do this),
@@ -138,7 +144,7 @@ The database can then be accessed via the \mintinline{js}{ctx} argument within t
 
 Since redis is used, the database has the form of a string-based key-value store. 
 Thus, keys should always be simple strings. 
-Values can be strings, arrays or JavaScript objects. %TODO ask Christoph: Should all be stringified, right?
+Values can be strings, arrays or JavaScript objects. 
 
 Writing or updating a key-value pair from a function wrapped by an rpcHandler is done via \mintinline{js}{ctx.db.set(key, value)}
 and retrieving a value is done via \mintinline{js}{ctx.db.get(key)}.
