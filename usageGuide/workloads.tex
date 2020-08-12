@@ -2,13 +2,14 @@
 \begin{document}
 
 
-\section{Usage Guide: Workloads}\label{sec:WorkloadsUsage}
+\subsection{Workloads}\label{sec:WorkloadsUsage}
 
-As we defined in the section BLUBB we are using artillery to run workloads on experiments.   % TODO: Design Principles->Experiment Structure->Workloads reference
+As we defined in section~\ref{sec:WorkloadsStructure} we are using artillery to run workloads on experiments. 
 
 In conclusion for setup you need to place your workload in the \\
 \texttt{experiments/EXPERIMENT\_NAME/} 
 folder and edit the \texttt{experiment.json} file to reference the workload by filename.
+
 \begin{tcolorbox}[titleDetachedStyle, title=\texttt{experiment.json}]
 \begin{minted}{js}
 ...
@@ -20,7 +21,7 @@ folder and edit the \texttt{experiment.json} file to reference the workload by f
 \end{minted}
 \end{tcolorbox}
 
-The \href{https://artillery.io/docs/}{official artillery docs} can be referenced for how to structure the workloads. Be sure to set the \texttt{processor} in the header to \\\textt{'\{\{ \$processEnvironment.PROCESSOR\_DIR \}\}/logger.js'} and set the \texttt{beforeRequest, afterResponse} as in the example  for every request. 
+The \texttt{official artillery documentation}\footnote{\url{https://artillery.io/docs/}} can be referenced for how to structure the workloads. Be sure to set the \texttt{processor} in the header to \\\texttt{'\{\{ \$processEnvironment.PROCESSOR\_DIR \}\}/logger.js'} and set the \texttt{beforeRequest}, \texttt{afterResponse} as in the example  for every request. 
 
 
 
@@ -38,11 +39,13 @@ To call a function with an rpc handler your request in artillery needs to look s
 \end{minted}
 \end{tcolorbox}
 
-\texttt{'\{\{ functionname \}\}'} will automatically resolve to the base url of function \texttt{functionname}.
+\texttt{'\{\{ functionname \}\}'} will automatically resolve to endpoint of the function \texttt{functionname}. \\
+Please reference Figure~\ref{fig:exampleWorkloadYML} for a full example of a minimal \texttt{workload.yml}.
 
-After this is configured and your experiment is built and deployed you can run \texttt{fmctl workload EXPERIMENT\_NAME} which will automatically provision a vps on AWS and run your workload on it, automatically fetching the logs back to your computer for later analysis. After this the server-instance will be automatically be destroyed.
+After this is configured and your experiment is built and deployed you can run \texttt{fmctl workload EXPERIMENT\_NAME} which will automatically provision a vps on AWS and run your workload on it, fetching the logs back to your computer for later analysis. After this the server-instance will be destroyed.
 
 You may wish to extend artillery functionality with javascript functions, for this please edit the \texttt{artillery/logger.js} file according to the artillery documentation.
+
 
 
 \end{document}
