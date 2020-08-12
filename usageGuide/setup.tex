@@ -4,7 +4,6 @@
 \section{Setup}\label{sec:setup}
 In this chapter, the experiment setup process will be explained.
 
-
 \subsection{Cloning the Repository}\label{sec:clonesetup}
 
 The first necessary step is to clone the GitHub repository to your local machine with 
@@ -21,8 +20,8 @@ If you prefer to run everything on your local machine have a look at \Cref{sec:m
 In the next sections are the setup instructions for the different cloud providers. 
 Be aware that self-hosted solutions need to be publicly accessible. 
 Tools like ngrok\footnote{\url{https://ngrok.com/}} can be useful for that step.
-It is only necessary to configure the providers that are used for the experiment. 
-At the end of a provder configuration, environment variables need to be exported. 
+It is only necessary to configure the providers that are used for the experiment.
+At the end of a provider configuration, environment variables need to be exported.
 For an overview of all configurable environment variables go to \Cref{sec:providersetupenv}.
 
 
@@ -88,12 +87,15 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
 This will only work with full OpenFaaS not with faasd due to multiple bugs in faasd.
 The only supported setup is the one using docker-swarm\footnote{\url{https://docs.openfaas.com/deployment/docker-swarm}}
 \begin{enumerate}
-\item Set up an openfaas instance using docker-swarm and write down the password it generates.
+\item Set up an OpenFaas instance using docker-swarm and write down the password it generates.
 \item Install faas-cli\footnote{\url{https://docs.openfaas.com/cli/install}} and login like the guide above details.
 \item Log your local docker into docker hub with docker login (other container registries are not directly supported by this project).
-This is needed to deploy functions to openfaas. Please note that by default this will make the functions you deploy to openfaas public on your account.
-\item export the \texttt{OPENFAAS\_GATEWAY} environment variable.
-\item export the \texttt{OPENFAAS\_TOKEN} environment variable to the password generated during openfaas setup.
+This is needed to deploy functions to OpenFaas. Please note that by default this will make the functions you deploy to OpenFaas public on your account.
+\item Execute the following: 
+  \begin{tcolorbox}
+    \texttt{export OPENFAAS\_GATEWAY=<address of OpenFaas gateway>}\\
+    \texttt{export OPENFAAS\_TOKEN=<OpenFaas password>}\\
+  \end{tcolorbox}
 \end{enumerate}
 
 \subsubsection{OpenWhisk}\label{sec:providersetupopenwhisk}
@@ -135,5 +137,24 @@ This is needed to deploy functions to openfaas. Please note that by default this
 
 
 \subsection{Manual Setup}\label{sec:manualsetup}
+
+To run the experiments the following tools need to be installed on your machine:
+
+\begin{table}[]
+\begin{tabular}{llll}
+Tool          & Version & Required                  & Download                                                                           \\
+terraform     & v0.12   & Required                  & https://www.terraform.io/downloads.html                                            \\
+Node.js       & v12     & Required                  & https://nodejs.org/en/                                                             \\
+npm           & v6      & Required                  & Included with Node.js                                                              \\
+jq            & jq-1.6  & Required                  & https://stedolan.github.io/jq/download/                                            \\
+Docker        & 19.03   & Required                  & https://docs.docker.com/get-docker/                                                \\
+go            & 1.14    & Required                  & https://golang.org/dl/                                                             \\
+awscli        & v2      & Required for AWS          & https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html             \\
+gcloud        & v293    & Required for Google Cloud & https://cloud.google.com/sdk/docs                                                  \\
+azure-cli     & v2      & Required for Azure        & https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest \\
+openwhisk-cli & v1      & Required for OpenWhisk    & https://github.com/apache/openwhisk-cli/releases                                   \\
+openfaas-cli  & v0.12   & Required for OpenFaaS     & https://docs.openfaas.com/cli/install/                                            
+\end{tabular}
+\end{table}
 
 \end{document}
