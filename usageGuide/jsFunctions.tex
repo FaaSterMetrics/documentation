@@ -27,7 +27,7 @@ It takes two arguments and is then passed to a so-called `rpcHandler' which gets
 \newpage{}%TODO review
 \subsection{Function Naming Convention}
 
-Each FaaS function of an experiment is found in a file named index.js which has its own directory within the experiment's functions folder.
+Each FaaS function of an experiment is found in a file named \texttt{index.js} which has its own directory within the experiment's functions folder.
 Thus, the path to the function code should end as follows (see also -TODO:\@ redacted-):%
 \begin{tcolorbox}
   \texttt{[\ldots]/experiments/<experiment\_name>/functions/<function\_name>/index.js}
@@ -150,12 +150,33 @@ Complete examples of user functions that also use a database can be seen in
 \Cref{fig:rpcHandlerFullFunctionalityExample,fig:routerFullFunctionalityExample}.
 
 \subsection{Custom Log Output}\label{sub:functionCustomLogs}
-usually not necessary
-timestamps etc obviously done by lib
+
+While the FaaSterMetrics library is usually sufficient for all logging purposes (see TODO:\@ ---redacted---),
+you may sometimes feel the need to introduce your own log statements and still get the usual timestamps, etc.\@
+for future analysis.
+In these situations, you can just use the \mintinline{js}{ctx.log('string_to_be_logged')} statement,
+where \mintinline{js}{ctx} is again the respective argument of your function.
+Within a function wrapped by a router, \mintinline{js}{ctx.lib.log('string_to_be_logged')} has to be used instead.
 
 \subsection{Other Helper Functions}\label{sub:helperFunctions}
 
-%TODO ask if ctx.log should be awaited
+If you ever want to write a function that changes its behaviour depending on where it is deployed,
+we have introduced simple helper functions that return truthy if and only if 
+the function is currently deployed on the respective provider:
+\begin{itemize}
+  \item \mintinline{js}{lib.helper.isLambda()}
+  \item \mintinline{js}{lib.helper.isGoogle()}
+  \item \mintinline{js}{lib.helper.isAzure()}
+  \item \mintinline{js}{lib.helper.isTinyfaas()}
+  \item \mintinline{js}{lib.helper.isOpenfaas()}
+  \item \mintinline{js}{lib.helper.isOpenwhisk()}
+\end{itemize}
+However their usage is strongly discouraged, 
+since it almost always contradicts the project's design principles to write platform-specific code.
+
+If you ever need to use some random ID in the form of a string,
+you can create it with \mintinline{js}{lib.helper.generateRandomID()} (which uses \mintinline{js}{Math.random()} internally).
+
 \begin{figure}
 \begin{tcolorbox}
 \begin{minted}{js}
