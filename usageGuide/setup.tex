@@ -39,11 +39,9 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
   googleapis.com/overview?project=<project\_name>} and enable the API.\@
 \item Execute the following: 
   \begin{tcolorbox}
-    \texttt{export GOOGLE\_APPLICATION\_CREDENTIALS={\fontfamily{ptm}\selectfont\textasciitilde}%
-    /.config/gcloud/application\\
-    \_default\_credentials.json}\\
-    \texttt{export GOOGLE\_PROJECT=faaster-278816}\\
-    \texttt{export GOOGLE\_REGION=us-east1}
+    \texttt{export GOOGLE\_APPLICATION\_CREDENTIALS=<path/to/privatekey.json>}\\
+    \texttt{export GOOGLE\_PROJECT=<project\_name>}\\
+    \texttt{export GOOGLE\_REGION=<region e.g. us-east1>}
   \end{tcolorbox}
 \end{enumerate}
 
@@ -53,9 +51,12 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
 \item Create a new user.
 \item Choose ``Programmatic access''.
 \item Go to ``Attach existing policies directly'' and choose ``AdministratorAccess''.
-\item export \texttt{AWS\_ACCESS\_KEY\_ID=<access\_key>} environment variable.
-\item export \texttt{AWS\_SECRET\_ACCESS\_KEY=<secret\_access\_key>} environment variable.
-\item export \texttt{AWS\_REGION=<region e.g. us-east-1>} environment variable.
+\item Execute the following: 
+  \begin{tcolorbox}
+    \texttt{export AWS\_ACCESS\_KEY\_ID=<access\_key>}\\
+    \texttt{export AWS\_SECRET\_ACCESS\_KEY=<secret\_access\_key>}\\
+    \texttt{export AWS\_REGION=<region e.g. us-east-1>}
+  \end{tcolorbox}
 \end{enumerate}
 
 \subsubsection{Microsoft Azure}\label{sec:providersetupazure}
@@ -64,8 +65,11 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
 \item Run \texttt{az login}.
 \item Run \texttt{az account list}.
 \item Choose your subscription you want to use for the deployment.
-\item export \texttt{ARM\_TENANT\_ID=<tenantId from az account list>} environment variable.
-\item export \texttt{ARM\_SUBSCRIPTION\_ID=<id from az account list>} environment variable.
+\item Execute the following: 
+  \begin{tcolorbox}
+    \texttt{export ARM\_TENANT\_ID=<tenantId from az account list>}\\
+    \texttt{export ARM\_SUBSCRIPTION\_ID=<id from az account list>}\\
+  \end{tcolorbox}
 \end{enumerate}
 
 \subsubsection{TinyFaaS}\label{sec:providersetuptinyfaas}
@@ -97,7 +101,7 @@ This is needed to deploy functions to openfaas. Please note that by default this
 \begin{enumerate}
 \item Setup OpenWhisk\footnote{\url{https://openwhisk.apache.org/documentation.html\#openwhisk\_deployment}}
 \item Configure credentials with \texttt{wsk property set}
-\item Set the `OPENWHISK\_EXTERNAL' environment variable. An example can be found on \url{https://my.openwhisk-apigateway.faas}.
+\item Set the `OPENWHISK\_EXTERNAL=<e.g. https://my.openwhisk-apigateway.faas>' environment variable.
 \end{enumerate}
 
 \subsubsection{Environment Setup Example}\label{sec:providersetupenv}
