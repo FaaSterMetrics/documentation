@@ -17,39 +17,43 @@ In the next sections are the setup instructions for the different cloud provider
 \subsubsection{Google Cloud Platform}\label{sec:providersetupgcp}
 
 \begin{enumerate}
-\item Create a new Google Cloud project with <project\_name>.
-\item Go to IAM > Service account or https://console.cloud.google.com/iam-admin/serviceaccounts?project=<project\_name>.
-\item Click Create Service account.
-\item Add the Project > Owner permission.
-\item Click Generate Private Key and download it as json we need the absolute path to the file later.
-\item Visit https://console.developers.google.com/apis/api/cloudfunctions.googleapis.com/overview?project=<project\_name> and enable the API.
-\item export GOOGLE\_APPLICATION\_CREDENTIALS=~/.config/gcloud/application\_default\_credentials.json
-export GOOGLE\_PROJECT=faaster-278816
-export GOOGLE\_REGION=us-east1
+\item Create a new Google Cloud project with \texttt{<project\_name>}.
+\item Go to \textit{IAM > Service account}.
+\item Click \textit{Create Service account}.
+\item Add the \textit{Project > Owner} permission.
+\item Click \textit{Generate Private Key} and download it as json we need the absolute path to the file later.
+\item Visit \textit{Cloud Functions} and enable the API.
+\item export \texttt{GOOGLE\_APPLICATION\_CREDENTIALS=<path/to/privatekey.json>} environment variable.
+\item export \texttt{GOOGLE\_PROJECT=<project\_name>} environment variable.
+\item export \texttt{GOOGLE\_REGION=<region e.g. us-east1>} environment variable.
 \end{enumerate}
 
 \subsubsection{Amazon Web Services}\label{sec:providersetupaws}
 \begin{enumerate}
 \item Go to IAM or https://console.aws.amazon.com/iam/home?\#/users.
 \item Create a new user.
-\item Choose "Programmatic access".
-\item Got to "Attach existing policies directly" and chose "AdministratorAccess".
-\item Go to the last step and save the Key ID and Access Key.
+\item Choose \textit{Programmatic access}.
+\item Got to \textit{Attach existing policies directly} and chose \textit{AdministratorAccess}.
+\item export \texttt{AWS\_ACCESS\_KEY\_ID=<access\_key>} environment variable.
+\item export \texttt{AWS\_SECRET\_ACCESS\_KEY=<secret\_access\_key>} environment variable.
+\item export \texttt{AWS\_REGION=<region e.g. us-east-1>} environment variable.
 \end{enumerate}
 
 \subsubsection{Microsoft Azure}\label{sec:providersetupazure}
 \begin{enumerate}
 \item Install the azure-cli.
-\item Run az login.
-\item Run az account list.
+\item Run \texttt{az login}.
+\item Run \texttt{az account list}.
 \item Choose your subscription you want to use for the deployment.
+\item export \texttt{ARM\_TENANT\_ID=<tenantId from az account list>} environment variable.
+\item export \texttt{ARM\_SUBSCRIPTION\_ID=<id from az account list>} environment variable.
 \end{enumerate}
 
 \subsubsection{TinyFaaS}\label{sec:providersetuptinyfaas}
 
 \begin{enumerate}
 \item If you don't have an tinyFaaS instance follow the instructions here\footnote{https://github.com/FaaSterMetrics/tinyFaaS}.
-\item Set the TINYFAAS\_ADDRESS environment variable. Please note that TINYFAAS\_ADDRESS must be publically visible on the internet in order for other FaaS platforms to talk to it. \textbf{Anyone with access to the tinyFaaS management port (8080) will be able to upload arbitrary functions, it is very advisable to configure your firewall to only let the deploying computer access that port}
+\item export \texttt{TINYFAAS\_ADDRESS} environment variable. Please note that TINYFAAS\_ADDRESS must be publically visible on the internet in order for other FaaS platforms to talk to it. \textbf{Anyone with access to the tinyFaaS management port (8080) will be able to upload arbitrary functions, it is very advisable to configure your firewall to only let the deploying computer access that port}
 
 \end{enumerate}
 
