@@ -12,7 +12,9 @@ If you prefer to run everything on your local machine have a look at \ref{sec:ma
 
 \subsection{Individual Provider Setups}\label{sec:providersetup}
 
-In the next sections are the setup instructions for the different cloud providers. Be aware that self-hosted solutions need to be publicly accessible. Tools like ngrok\footnote{https://ngrok.com/} can be useful for that step.
+In the next sections are the setup instructions for the different cloud providers. Be aware that self-hosted solutions need to be publicly accessible. Tools like ngrok\footnote{https://ngrok.com/} can be useful for that step. \\
+It is only necessary to configure the providers that are used for the experiment. At the end of a provder configuration, environment variables need to be exported. For an overview of all configurable environment variables go to section \ref{sec:providersetupenv}.
+
 
 \subsubsection{Google Cloud Platform}\label{sec:providersetupgcp}
 
@@ -65,16 +67,47 @@ The only supported setup is the one using docker swarm https://docs.openfaas.com
 \item Install faas-cli https://docs.openfaas.com/cli/install/ and login like the guide above details.
 \item Log your local docker into docker hub with docker login (other container registries are not directly supported by this project).
 This is needed to deploy functions to openfaas. Please note that by default this will make the functions you deploy to openfaas public on your account.
-\item Set your OPENFAAS\_GATEWAY environment variable like detailed below and OPENFAAS\_TOKEN to the password generated during openfaas setup.
+\item export the \texttt{OPENFAAS\_GATEWAY} environment variable.
+\item export the \texttt{OPENFAAS\_TOKEN} environment variable to the password generated during openfaas setup.
 \end{enumerate}
 
 \subsubsection{OpenWhisk}\label{sec:providersetupopenwhisk}
 
 \begin{enumerate}
-\item Setup OpenWhisk\footnote{https://openwhisk.apache.org/documentation.html\#openwhisk_deployment}
-\item Set the OPENWHISK\_EXTERNAL environment variable. For example: https://my.openwhisk-apigateway.faas.
+\item Setup OpenWhisk\footnote{https://openwhisk.apache.org/documentation.html\#openwhisk\_deployment}
 \item Configure credentials with \texttt{wsk property set}
+\item export \texttt{OPENWHISK\_EXTERNAL=<e.g. https://my.openwhisk-apigateway.faas>} environment variable.
 \end{enumerate}
+
+\subsubsection{Environment Setup Example}\label{sec:providersetupenv}
+
+
+\begin{figure}[H]
+\begin{tcolorbox}
+\begin{minted}{bash}
+  export AWS_ACCESS_KEY_ID=<From the web interface>
+  export AWS_SECRET_ACCESS_KEY=<From the web interface>
+
+  export GOOGLE_APPLICATION_CREDENTIALS=<path/to/key-file.json>
+  export GOOGLE_PROJECT=<project_name>
+
+  export AWS_REGION=<ie us-east-1>
+  export GOOGLE_REGION=<ie us-east1>
+
+  export ARM_TENANT_ID=<tenantId from az account list>
+  export ARM_SUBSCRIPTION_ID=<id from az account list>
+
+  export TINYFAAS_ADDRESS=<tinyfaas instance eg localhost>
+
+  export OPENFAAS_GATEWAY=http://<address of openfaas gateway>:8080
+  export OPENFAAS_TOKEN=<openfaas password>
+  export OPENWHISK_EXTERNAL=<eg http://localhost:3233>
+\end{minted}
+\end{tcolorbox}
+\caption{Environment Setup}%
+\label{fig:envSetup}
+\end{figure}
+
 
 \subsection{Manual Setup}\label{sec:manualsetup}
 
