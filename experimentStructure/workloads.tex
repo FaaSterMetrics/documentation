@@ -4,7 +4,6 @@
 
 \subsection{Workloads}\label{sec:WorkloadsStructure}
 
-<<<<<<< HEAD
 The workload is the core of an experiment as it defines how a program is used and tested. 
 Thus, we want to make the generated workload reproducible. 
 Many aspects play into the resulting workload such as the physical position and network connection of the machine the workload is generated on. 
@@ -14,11 +13,8 @@ We generate and define the workload through artillery which allows us to execute
 such as URL path traversal or random path choice on endpoints. 
 We utilize this to emulate heterogeneous user behaviour for i.e.\@ the webshop, 
 it is also possible to generate high load used i.e.\@ for the IoT application.
-=======
-The workload is the core of an experiment as it defines how a program is used and tested. Thus, we want to make the generated workload reproducible. Many aspects play into the resulting workload such as the physical position and network connection of the machine the workload is generated on. To minimize those aspects we are automatically provisioning an VPS on AWS for workload generation.
 
-We define the workload through artillery which allows us to execute user-like workloads such as URL path traversal or random path choice on endpoints. We utilize this to emulate heterogeneous user behaviour for i.e. the webshop, it's also possible to generate high load used i.e. for the IoT application.
->>>>>>> ed4e42f0f2ce2aad727c690ed15758733afca88d
+We define the workload through artillery which allows us to execute user-like workloads such as URL path traversal or random path choice on endpoints. We utilize this to emulate heterogeneous user behaviour for i.e.\@ the webshop, it's also possible to generate high load used i.e.\@ for the IoT application.
 
 The intent to generate a workload needs to be defined in the \texttt{"services"} section of the \texttt{experiment.json}, specifying the workload path relative to the \texttt{experiments/functionname/} path. % TODO: link experiment.json figure
 

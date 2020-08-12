@@ -42,7 +42,7 @@ To call a function with an rpc handler your request in artillery needs to look s
 \texttt{'\{\{ functionname \}\}'} will automatically resolve to endpoint of the function \texttt{functionname}. \\
 Please reference Figure~\ref{fig:exampleWorkloadYML} for a full example of a minimal \texttt{workload.yml}.
 
-After this is configured and your experiment is built and deployed you can run \texttt{fmctl workload EXPERIMENT\_NAME} which will automatically provision a vps on AWS and run your workload on it, fetching the logs back to your computer for later analysis. After this the server-instance will be destroyed.
+After this is configured and your experiment is built and deployed you can run \texttt{fmctl workload EXPERIMENT\_NAME} in the docker container which will automatically provision a vps on AWS and run your workload on it, fetching the logs back to your computer for later analysis. After this the server-instance will be destroyed.
 
 You may wish to extend artillery functionality with javascript functions, for this please edit the \texttt{artillery/logger.js} file according to the artillery documentation.
 
