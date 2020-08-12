@@ -2,7 +2,7 @@
 \begin{document}
 
 
-\subsection{Workloads}\label{sec:WorkloadsStructure}
+\section{Workloads}\label{sec:WorkloadsStructure}
 
 The workload is the core of an experiment as it defines how a program is used and tested. 
 Thus, we want to make the generated workload reproducible. 
@@ -18,8 +18,7 @@ We define the workload through artillery which allows us to execute user-like wo
 
 The intent to generate a workload needs to be defined in the \texttt{"services"} section of the \texttt{experiment.json}, specifying the workload path relative to the \texttt{experiments/functionname/} path. % TODO: link experiment.json figure
 
-We are using standard artillery workload-definitions so the \texttt{official documentation}\footnote{\url{https://artillery.io/docs/}} apply. However there are some requirements that need to be fullfilled, please reference % TODO: link usageGuide/workloads.tex guide
-Please see Figure~\Cref{fig:exampleWorkloadYML} for an example of a valid FaaSterMetrics workload.yml.
+We are using standard artillery workload-definitions so the \texttt{official documentation}\footnote{\url{https://artillery.io/docs/}} apply. However there are some requirements that need to be fullfilled, please see Figure~\Cref{fig:exampleWorkloadYML} for an example of a valid FaaSterMetrics workload.yml.
 
 We've made use of their scripting capabilities to inject an unique identifier into every request header to allow keeping track of where every single request went. 
 
