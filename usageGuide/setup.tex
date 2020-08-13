@@ -40,7 +40,7 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
   \begin{tcolorbox}
     \texttt{export GOOGLE\_APPLICATION\_CREDENTIALS=<path/to/privatekey.json>}\\
     \texttt{export GOOGLE\_PROJECT=<project\_name>}\\
-    \texttt{export GOOGLE\_REGION=<region e.g. us-east1>}
+    \texttt{export GOOGLE\_REGION=<region e.g.\@ us-east1>}
   \end{tcolorbox}
 \end{enumerate}
 
@@ -54,7 +54,7 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
   \begin{tcolorbox}
     \texttt{export AWS\_ACCESS\_KEY\_ID=<access\_key>}\\
     \texttt{export AWS\_SECRET\_ACCESS\_KEY=<secret\_access\_key>}\\
-    \texttt{export AWS\_REGION=<region e.g. us-east-1>}
+    \texttt{export AWS\_REGION=<region e.g.\@ us-east-1>}
   \end{tcolorbox}
 \end{enumerate}
 
@@ -103,7 +103,7 @@ This is needed to deploy functions to OpenFaas. Please note that by default this
 \begin{enumerate}
 \item Setup OpenWhisk\footnote{\url{https://openwhisk.apache.org/documentation.html\#openwhisk\_deployment}}
 \item Configure credentials with \texttt{wsk property set}
-\item Set the `OPENWHISK\_EXTERNAL=<e.g. https://my.openwhisk-apigateway.faas>' environment variable.
+\item Set the `OPENWHISK\_EXTERNAL=<e.g.\@ https://my.openwhisk-apigateway.faas>' environment variable.
 \end{enumerate}
 
 \subsubsection{Environment Setup Example}\label{sec:providersetupenv}
@@ -138,23 +138,32 @@ This is needed to deploy functions to OpenFaas. Please note that by default this
 
 \subsection{Manual Setup}\label{sec:manualsetup}
 
-To run the experiments the following tools need to be installed on your machine:
+To run the experiments the following tools listed in \Cref{tab:requiredTools} need to be installed on your machine.
 
-\begin{table}[]
-\begin{tabular}{llll}
-Tool          & Version & Required                  & Download                                                                           \\
-terraform     & v0.12   & Required                  & https://www.terraform.io/downloads.html                                            \\
-Node.js       & v12     & Required                  & https://nodejs.org/en/                                                             \\
-npm           & v6      & Required                  & Included with Node.js                                                              \\
-jq            & jq-1.6  & Required                  & https://stedolan.github.io/jq/download/                                            \\
-Docker        & 19.03   & Required                  & https://docs.docker.com/get-docker/                                                \\
-go            & 1.14    & Required                  & https://golang.org/dl/                                                             \\
-awscli        & v2      & Required for AWS          & https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html             \\
-gcloud        & v293    & Required for Google Cloud & https://cloud.google.com/sdk/docs                                                  \\
-azure-cli     & v2      & Required for Azure        & https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest \\
-openwhisk-cli & v1      & Required for OpenWhisk    & https://github.com/apache/openwhisk-cli/releases                                   \\
-openfaas-cli  & v0.12   & Required for OpenFaaS     & https://docs.openfaas.com/cli/install/                                            
-\end{tabular}
-\end{table}
+\begin{longtable}{l c l l} 
+  \caption{Tools Necessary for Setup\vspace*{1mm}}\label{tab:requiredTools}\\
+\textbf{Tool} & \textbf{Min.\@ Version} & \textbf{Comment} & \textbf{Manual Download}\\ 
+\toprule
+%\endhead{}%
+terraform     & v0.12   & Required                  & https://www.terraform.io/\\
+              &         &                           & downloads.html\\
+Node.js       & v12     & Required                  & https://nodejs.org/en\\
+npm           & v6      & Required                  & Included with Node.js\\
+jq            & jq-1.6  & Required                  & https://stedolan.github.io/jq/\\
+              &         &                           & download\\
+Docker        & 19.03   & Required                  & https://docs.docker.com/get-docker\\
+go            & 1.14    & Required                  & https://golang.org/dl\\
+awscli        & v2      & Required for AWS          & https://docs.aws.amazon.com/cli/\\
+              &         &                           & latest/userguide/cli-chap-install.html\\
+gcloud        & v293    & Required for Google Cloud & https://cloud.google.com/sdk/docs\\
+azure-cli     & v2      & Required for Azure        & https://docs.microsoft.com/en-us/\\
+              &         &                           & cli/azure/install-azure-cli?view=\\
+              &         &                           & azure-cli-latest\\
+openwhisk-cli & v1      & Required for OpenWhisk    & https://github.com/apache/open\\
+              &         &                           & whisk-cli/releases\\
+openfaas-cli  & v0.12   & Required for OpenFaaS     & https://docs.openfaas.com/cli/install\\
+\bottomrule
+\endfoot{}
+\end{longtable}
 
 \end{document}
