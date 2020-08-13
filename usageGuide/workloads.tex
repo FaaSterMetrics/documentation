@@ -4,6 +4,8 @@
 
 \section{Workloads}\label{sec:WorkloadsUsage}
 
+\subsection{Setting up an experiment for workload deployment}
+
 As outlined in \Cref{sec:WorkloadsStructure} we are using artillery to run workloads on experiments. 
 In~short you add a workload to an experiment by placing a \texttt{<workload\_name>.yml} 
 within the \texttt{experiments/<experiment\_name>} 
@@ -20,14 +22,11 @@ folder and editing the \texttt{experiment.json} to reference that workload:
 \end{minted}
 \end{tcolorbox}
 
-TODO: rework following paragraph
+\subsection{Defining your workload}
 
 See the \texttt{official artillery documentation}\footnote{\url{https://artillery.io/docs/}} for how to structure your workloads. 
-Be sure to set the \texttt{processor} in the header to the following:\\
-\begin{tcolorbox}
-  \mintinline{yaml}{'\{\{ \$processEnvironment.PROCESSOR\_DIR\}\}/logger.js'} 
-\end{tcolorbox}
-Also set \texttt{beforeRequest} and \texttt{afterResponse} as in the example (TODO:\@ Ref) for every request. 
+Be sure to set the \texttt{processor}, \texttt{beforeRequest} and \texttt{afterResponse} as in the example \Cref{fig:exampleWorkloadYML}. 
+It is important that the \texttt{beforeRequest} and \texttt{afterResponse} are set for every single request.
 
 In order to call a function with an rpcHandler, your request in artillery should look similarly to this:
 \begin{tcolorbox}[titleDetachedStyle, title=\texttt{workload.yml}]
@@ -44,10 +43,14 @@ In order to call a function with an rpcHandler, your request in artillery should
 In this example, \mintinline{yaml}{'{{ functioname }}'} will automatically resolve to endpoint of the function \texttt{functionname}. \\
 See \Cref{fig:exampleWorkloadYML} for a full example of a minimal \texttt{workload.yml}.
 
+\subsection{Executing your workload}
+
 After this is configured and your experiment is deployed you can run \texttt{fmctl workload <experiment\_name>} 
 within the docker container. This will automatically provision a vps on AWS, run your workload on it, and
 fetch its logs back to your computer for later analysis. Afterwards, the server-instance will be destroyed.
 If you are not using docker, the workload command is \texttt{npm run workload <experiment\_name>}.
+
+\subsection{Extending artillery}
 
 You may wish to extend artillery functionality by JavaScript functions.
 In this case, you have to edit the \texttt{artillery/logger.js} file as outlined in the artillery documentation%
