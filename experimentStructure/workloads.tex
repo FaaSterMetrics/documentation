@@ -4,25 +4,27 @@
 
 \section{Workloads}\label{sec:WorkloadsStructure}
 
+\subsection{General workload architecture} % Todo: meh title
+
 The workload is the core of an experiment as it defines how a program is used and tested. 
 Thus, we want to make the generated workload reproducible. 
 Many aspects play into the resulting workload such as the physical position and network connection of the machine the workload is generated on. 
 To minimize those aspects we are automatically provisioning an VPS on AWS which will generate the workload.
-
-We generate and define the workload through artillery which allows us to execute user-like workloads 
-such as URL path traversal or random path choice on endpoints. 
-We utilize this to emulate heterogeneous user behaviour for i.e.\@ the webshop, 
-it is also possible to generate high load used i.e.\@ for the IoT application.
 
 We define the workload through \texttt{artillery}\footnote{\url{https://artillery.io}} which allows us to 
 execute user-like workloads such as URL path traversal or random path choice on endpoints. 
 We utilize this to emulate heterogeneous user behaviour for i.e.\@ the webshop, 
 it is also possible to generate high load used i.e.\@ for the IoT application.
 
+\subsection{Required configuration}
+
+
 If you want to execute a specific workload for an experiment, 
 you have to declare this in the \mintinline{json}{"services"} section of your \texttt{experiment.json}.
 Thereby, the path to \texttt{workload.yml} should be given relative to the \texttt{experiments/<experiment\_name>} path. 
 % TODO: link experiment.json figure
+
+\subsection{Defining workloads}
 
 We are using standard artillery workload-definitions, 
 so their \texttt{official documentation}\footnote{\url{https://artillery.io/docs/}} applies. 
@@ -34,6 +36,8 @@ into every request header to allow keeping track of where every single request w
 For this we define the \texttt{beforeRequest} and \texttt{afterResponse} callbacks for each request 
 which the \texttt{artillery/logger.js} file provides.
 In the case of the iot workloads we also use javascript callbacks to attach an image to certain requests.
+
+Please reference \Cref{sec:WorkloadsUsage} for more in depth usage instructions.
 
 \begin{figure}[H]
   \begin{tcolorbox}[titleDetachedStyle, title=\texttt{workload.yml}]
