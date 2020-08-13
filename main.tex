@@ -12,6 +12,11 @@
 \usepackage[pdfdisplaydoctitle,menucolor=orange!40!black,filecolor=magenta!40!black,urlcolor=blue!40!black,linkcolor=red!40!black,citecolor=green!40!black,colorlinks]{hyperref}
 \usepackage[sort&compress,nameinlink,noabbrev]{cleveref}
 
+% Tables
+\usepackage{ltxtable}
+\usepackage{makecell}
+\usepackage{booktabs}
+
 % Code highlighting. Needs Pygments (Python2) installed.
 \usepackage[chapter]{minted}
 \usemintedstyle{rainbow_dash}
@@ -67,9 +72,16 @@
 
 \begin{document}
 
+% KOMA Fonts
+\setkomafont{title}{\bfseries}
+\setkomafont{subtitle}{\bfseries\Large}
+\setkomafont{author}{\bfseries\large}
+\setkomafont{date}{\bfseries\large}
+
 \titlehead{%
   \includegraphics[width=\linewidth]{MCC_Header.png}
 }
+
 \title{FaaSterMetrics}
 \subtitle{An Application-oriented Function as a Service Benchmarking Framework}
 \author{Luk Burchard \and Carsten Schubert \and Christoph Witzko \and Max Zhao \and Emily Dietrich %
