@@ -22,6 +22,8 @@ folder and editing the \texttt{experiment.json} to reference that workload:
 \end{minted}
 \end{tcolorbox}
 
+TODO: add ref to full experiment.json here
+
 \subsection{Defining your workload}
 
 See the \texttt{official artillery documentation}\footnote{\url{https://artillery.io/docs/}} for how to structure your workloads. 
@@ -45,7 +47,7 @@ See \Cref{fig:exampleWorkloadYML} for a full example of a minimal \texttt{worklo
 
 \subsection{Executing your workload}
 
-After this is configured and your experiment is deployed you can run \texttt{fmctl workload <experiment\_name>} 
+After the workload is configured and your experiment is deployed you can run \texttt{fmctl workload <experiment\_name>} 
 within the docker container. This will automatically provision a vps on AWS, run your workload on it, and
 fetch its logs back to your computer for later analysis. Afterwards, the server-instance will be destroyed.
 If you are not using docker, the workload command is \texttt{npm run workload <experiment\_name>}.
