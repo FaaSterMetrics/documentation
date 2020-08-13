@@ -29,12 +29,52 @@ but has of course been fully reimplemented as a FaaS project (except some HTML t
 \caption[Webshop Architecture Diagram]{%
   Webshop architecture diagram as illustrated by Google\protect\footnotemark.
   %TODO remove external API
-  All `services' as well as the frontend are implemented as one function within our demo application. 
+  All `services' as well as the frontend are implemented as separate functions within our demo application. 
   They communicate internally with each other via our library's RPC system and are thus automatically measured at runtime.%
 }%
 \label{fig:webshopArchitectureDiagram}
 \end{figure}
 \footnotetext{\url{https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/bae651f7ea537d2676b38a04d89adacdd45c17bd/docs/img/architecture-diagram.png}}
+
+\begin{longtable}{l l l} 
+  \caption[Webshop Function Descriptions]{Webshop Function Descriptions\vspace*{1mm}}\label{tab:requiredTools}\\
+  \textbf{Service} & \textbf{Function} &  \textbf{Description}\\ 
+  \toprule
+  %\endhead{}%
+  Frontend                                & frontend            & \\
+  \midrule[0.02em]
+  \multirow{3}{*}{Product Catalog Service}& getproduct          &\\
+                                          & listproducts        &\\
+                                          & searchproducts      &\\
+  \midrule[0.02em]
+  Recommendation Service                  & listrecommendations &\\
+  \midrule[0.02em]
+  \multirow{4}{*}{Cart Service}           & getcart             &  \\
+                                          & addcartitem         &  \\
+                                          & emptycart           &  \\
+                                          & cartkvstorage       &  \\
+  \midrule[0.02em]
+  Checkout Service                        & checkout            &\\
+  \midrule[0.02em]
+  \multirow{2}{*}{Currency Service}       & currency            &\\
+                                          & supportedcurrencies &\\
+  \midrule[0.02em]
+  Payment Service                         & payment             & \\
+  \midrule[0.02em]
+  \multirow{2}{*}{Shipping Service}       & shipmentquote       &\\
+                                          & shiporder           &\\
+  \midrule[0.02em]
+  Email Service                           & email               &\\
+  \midrule[0.02em]
+  Ad Service                              & getads              &\\
+  \bottomrule
+\end{longtable}
+
+% TODO Call Spec Appendix
+Exact Function I/O specification can also be looked up within the source code\footnotemark.
+There, each function has its own I/O behaviour (including individual examples) documented.
+\footnotetext{\url{https://github.com/FaaSterMetrics/experiments/tree/master/experiments/webservice/functions}}
+
 
 
 \subsection{Benchmarking Properties}\label{ssec:webshopApplicationProperties}
