@@ -1,4 +1,4 @@
-\documentclass[english,12pt]{scrreprt}
+\documentclass[english,12pt,numbers=noenddot]{scrreprt}
 
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 \usepackage{microtype} % Slightly tweak font spacing for aesthetics
@@ -32,6 +32,39 @@
 }
 \usepackage{csquotes}
 
+
+%%% Appendix formatting
+% Taken from https://tex.stackexchange.com/questions/202928/remove-last-dot-in-title-numbering
+\DeclareTOCStyleEntry[
+  level=\chaptertocdepth,
+  indent=0pt,
+  numwidth=2.3em,
+  dynnumwidth,
+  linefill=\hfill,
+  entryformat=\appendixtocformat,
+  entrynumberformat=\appendixtocnumberformat,
+  pagenumberformat=\appendixtocpagenumberformat{}
+]{tocline}{appendixchapter}
+\newcommand*\appendixtocformat[1]{{\usekomafont{chapterentry}#1}}
+\newcommand*\appendixtocnumberformat[1]{{\def\autodot{:}\appendixname\ #1}}
+\newcommand*\appendixtocpagenumberformat[1]
+  {{\usekomafont{chapterentry}\usekomafont{chapterentrypagenumber}#1}}
+
+\usepackage{xpatch}
+\xapptocmd\appendix
+  {%
+    \renewcommand*{\chapterformat}{%
+      \mbox{\appendixname{\nobreakspace}\thechapter:%
+        \IfUsePrefixLine{}{\enskip}}%
+    }%
+    \renewcommand*{\chaptermarkformat}{\appendixname\ \thechapter:\enskip}%
+    \xpatchcmd{\addchaptertocentry}
+      {\addtocentrydefault{chapter}{#1}{#2}}
+      {\addtocentrydefault{appendixchapter}{#1}{#2}}%
+      {}{\PatchFailed}%
+  }{}{\PatchFailed}
+%%%
+
 \begin{document}
 
 \title{FaaSterMetrics}
@@ -58,11 +91,16 @@
 
 \subfile{experimentStructure/workloads.tex}
 
+\chapter{Demo Applications}
+
+\subfile{demoApplications/webshop.tex}
+
 \chapter{Usage guide}
 \subfile{usageGuide/setup.tex}
 \subfile{usageGuide/jsFunctions.tex}
 \subfile{usageGuide/workloads.tex}
 
 
-
+\appendix
+\subfile{appendix/acronyms.tex}
 \end{document}
