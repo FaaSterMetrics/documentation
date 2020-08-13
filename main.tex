@@ -10,7 +10,6 @@
 \usepackage{graphicx}
 \usepackage{subfiles}
 \usepackage[pdfdisplaydoctitle,menucolor=orange!40!black,filecolor=magenta!40!black,urlcolor=blue!40!black,linkcolor=red!40!black,citecolor=green!40!black,colorlinks]{hyperref}
-\usepackage[sort&compress,nameinlink,noabbrev]{cleveref}
 
 % Tables
 \usepackage{ltxtable}
@@ -70,6 +69,9 @@
   }{}{\PatchFailed}
 %%%
 
+\usepackage[sort&compress,nameinlink,noabbrev]{cleveref}
+
+
 \begin{document}
 
 % KOMA Fonts
@@ -113,6 +115,7 @@
 \chapter{Usage guide}
 \subfile{usageGuide/setup.tex}
 \subfile{usageGuide/jsFunctions.tex}
+\subfile{usageGuide/build_and_deploy.tex}
 \subfile{usageGuide/workloads.tex}
 
 
