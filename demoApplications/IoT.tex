@@ -1,7 +1,7 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-\section{IoT Application (Traffic Lights Calculator)}\label{sec:iot}
+\section{IoT Application (Traffic Light Calculator)}\label{sec:iot}
 
 % Design Concepts
 We implemented an IoT Application managing some crossing's traffic light, 
@@ -10,22 +10,25 @@ The road intersection contains various cameras and sensors.
 These allow for dynamically adapting light phases to current traffic, 
 weather conditions, and intentions of road users. 
 
-We simplified the conplex scenario by only representing a single city traffic light oriented on German standard switching states:
-The traffic light is red if there are no cars attempting to cross 
+\subsection{Application Design}\label{ssec:iotApplicationStructure}
+
+We simplified this conplex scenario by only representing a single city traffic light 
+that shows German standard light phases: 
+The traffic light gets yellow (for a few seconds) then red if there are no cars attempting to cross 
 or if there is a car that approaches dangerously fast (and thus has to be stopped). 
 It switches to green (via yellow-red) otherwise. 
 
 For dangerous road conditions (like bad weather), each light switch is delayed. 
 In the special case that an emergency (ambulance/police) is detected, 
-the lights instantly switch to yellow and blink 
+the light instantly switches to yellow and blink 
 in order to warn all participants. 
 We assume cars only cross on green and pedestrians only cross on red.
 
-Databases are needed for coordinating multiple functions' states
-and for storing traffic statistics.
-
-
-\subsection{Application Design}\label{ssec:iotApplicationStructure}
+Detailed descriptions of how the application is structured 
+and of each function's purpose are depicted in 
+\Cref{fig:iotArchitectureDiagram} and \Cref{tab:iotFunctionOverview}.
+Databases are needed for aggregating/coordinating multiple functions' states
+and for storing traffic statistics. 
 
 \begin{figure}
 \begin{center}
@@ -73,17 +76,32 @@ and for storing traffic statistics.
   \bottomrule
 \end{longtable}
 
-% TODO functionality description
-
-% TODO Call Spec Appendix
 Exact Function I/O specification can also be looked up within the source code\footnotemark.
-There, each function has its own I/O behaviour (including individual examples) documented.
+There, each function has its I/O behaviour (including individual examples) documented.
 \footnotetext{\url{https://github.com/FaaSterMetrics/experiments/tree/master/experiments/iot/functions}}
-
-
 
 \subsection{Benchmarking Properties}\label{ssec:iotApplicationProperties}
 
+In comparison to the webshop application, the IoT traffic light calculator combines data from multiple input sources
+which are heterogeneous both in their structural and their frequency behaviour. 
+
+Those inputs vary from continuous image and sensor streams to signals by incoming vehicles. 
+Additionally, the introduced operations require combination of multiple data sources, 
+as well as passing information to multiple subsequent operations, 
+leading to a branched pipeline structure (\Cref{fig:iotArchitectureDiagram}). %TODO formulation?
+While some functions only perform bookkeeping functions, others such as the emergency detection have strict latency requirements.
+
+Regarding the technical side of IoT infrastructure most major platforms nowadays include tailored stacks for IoT deployments\footnotemark.
+Those offer managed device management/data acquisition stack (MQTT, trigger systems)
+and integration into their broader cloud platform services including FaaS.
+We consider our scope to be only the FaaS system's reaction to incoming IoT data. 
+Therefore MQTT and trigger systems are neither tested nor built into our implementation. 
+Only the FaaS functions themselves and database connections for storing or collecting information are needed.
+
+\footnotetext{See e.g.\@ Azure IoT Edge (\url{https://docs.microsoft.com/en-us/azure/iot-edge}),
+Google Cloud IoT (\url{https://cloud.google.com/solutions/iot}) and
+AWS IoT Greengrass (\url{https://aws.amazon.com/iot/solutions/iot-edge})
+}
 
 \subsection{Specific Workloads}\label{ssec:iotSpecificWorkloads}
 
