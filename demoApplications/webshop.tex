@@ -37,38 +37,72 @@ but has of course been fully reimplemented as a FaaS project (except some HTML t
 \footnotetext{\url{https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/bae651f7ea537d2676b38a04d89adacdd45c17bd/docs/img/architecture-diagram.png}}
 
 \begin{longtable}{l l l} 
-  \caption[Webshop Function Descriptions]{Webshop Function Descriptions\vspace*{1mm}}\label{tab:requiredTools}\\
+  \caption[Webshop Function Overview]{Webshop Function Overview\vspace*{1mm}}\label{tab:requiredTools}\\
   \textbf{Service} & \textbf{Function} &  \textbf{Description}\\ 
   \toprule
   %\endhead{}%
-  Frontend                                & frontend            & \\
+  Frontend                                & frontend            & 
+  \makecell[l]{Receives user requests and displays webpage. \\
+    Calls all other functions (except payment, e- \\
+    mail and shiporder) depending on requests.}\\
   \midrule[0.02em]
-  \multirow{3}{*}{Product Catalog Service}& getproduct          &\\
-                                          & listproducts        &\\
-                                          & searchproducts      &\\
+  \multirow{3}{*}{Product Catalog Service}& getproduct          &
+  \makecell[l]{Returns all data about a product given its ID.}\\
+  \cmidrule[0.02em]{2-3}
+                                          & listproducts        &
+  \makecell[l]{Returns all data about available products.}\\
+  \cmidrule[0.02em]{2-3}
+                                          & searchproducts      &
+  \makecell[l]{Searches product catalog for some string and \\
+    returns all matching products.}\\
   \midrule[0.02em]
-  Recommendation Service                  & listrecommendations &\\
+  Recommendation Service                  & listrecommendations &
+  \makecell[l]{Takes a list of product IDs, responds with \\
+    list of up to 7 other related (`recommended') \\
+    product IDs.}\\
   \midrule[0.02em]
-  \multirow{4}{*}{Cart Service}           & getcart             &  \\
-                                          & addcartitem         &  \\
-                                          & emptycart           &  \\
-                                          & cartkvstorage       &  \\
+  \multirow{4}{*}{Cart Service}           & getcart             & 
+  \makecell[l]{Returns a given user's shopping cart.}\\
+  \cmidrule[0.02em]{2-3}
+                                          & addcartitem         & 
+  \makecell[l]{Adds an item to a user's shopping cart.}\\
+  \cmidrule[0.02em]{2-3}
+                                          & emptycart           & 
+  \makecell[l]{Empties a given user's shopping cart.}\\
+  \cmidrule[0.02em]{2-3}
+                                          & cartkvstorage       & 
+  \makecell[l]{Manages the internal cart database. Only call-\\
+    ed by the other cart service functions.}\\
   \midrule[0.02em]
-  Checkout Service                        & checkout            &\\
+  Checkout Service                        & checkout            &
+    \makecell[l]{Handles a checkout process when requested \\
+    by user (via frontend). Involves e.g.\@ calling \\
+    payment, shiporder, email and emptycart.}\\
   \midrule[0.02em]
-  \multirow{2}{*}{Currency Service}       & currency            &\\
-                                          & supportedcurrencies &\\
+  \multirow{2}{*}{Currency Service}       & currency            &
+  \makecell[l]{Converts a price from one currency to another.}\\
+  \cmidrule[0.02em]{2-3}
+                                          & supportedcurrencies &
+  \makecell[l]{Returns a list of all supported currencies.}\\
   \midrule[0.02em]
-  Payment Service                         & payment             & \\
+  Payment Service                         & payment             &
+  \makecell[l]{Handles a payment.}\\
   \midrule[0.02em]
-  \multirow{2}{*}{Shipping Service}       & shipmentquote       &\\
-                                          & shiporder           &\\
+  \multirow{2}{*}{Shipping Service}       & shipmentquote       &
+  \makecell[l]{Calculates cost of shipping a given order.}\\
+  \cmidrule[0.02em]{2-3}
+                                          & shiporder           &
+  \makecell[l]{Handles actual shipping of an order.}\\
   \midrule[0.02em]
-  Email Service                           & email               &\\
+  Email Service                           & email               &
+  \makecell[l]{Sends a confirmation email.}\\
   \midrule[0.02em]
-  Ad Service                              & getads              &\\
+  Ad Service                              & getads              &
+  \makecell[l]{Supplies links to random cat pictures.}\\
   \bottomrule
 \end{longtable}
+
+% TODO functionality description
 
 % TODO Call Spec Appendix
 Exact Function I/O specification can also be looked up within the source code\footnotemark.

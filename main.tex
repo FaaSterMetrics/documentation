@@ -1,5 +1,9 @@
 \documentclass[english,12pt,numbers=noenddot]{scrreprt}
 
+% Print matriculation numbers?
+\newif\ifmtrklnum{}
+\mtrklnumtrue{}
+
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 \usepackage{microtype} % Slightly tweak font spacing for aesthetics
 %\usepackage[ngerman,main=english]{babel} 
@@ -14,7 +18,7 @@
 % Tables
 \usepackage{ltxtable}
 \usepackage{multirow}
-%\usepackage{makecell}
+\usepackage{makecell}
 \usepackage{booktabs}
 
 % Code highlighting. Needs Pygments (Python2) installed.
@@ -72,23 +76,36 @@
 
 \usepackage[sort&compress,nameinlink,noabbrev]{cleveref}
 
-
 \begin{document}
-
+%
 % KOMA Fonts
 \setkomafont{title}{\bfseries}
 \setkomafont{subtitle}{\bfseries\Large}
 \setkomafont{author}{\bfseries\large}
 \setkomafont{date}{\bfseries\large}
-
 \titlehead{%
   \includegraphics[width=\linewidth]{MCC_Header.png}
 }
-
+%
 \title{FaaSterMetrics}
 \subtitle{An Application-oriented Function as a Service Benchmarking Framework}
-\author{Luk Burchard \and Carsten Schubert \and Christoph Witzko \and Max Zhao \and Emily Dietrich %
-\thanks{~Special thanks to Prof.\@ Dr.\@ David Bermbach and Martin Grambow for project supervision}}
+%
+\ifmtrklnum{}
+\author{Luk Burchard ()
+  \and Carsten Schubert (380852) 
+  \and Christoph Witzko ()
+  \and Max Zhao ()
+  \and Emily Dietrich (380817)~%
+  \thanks{~Special thanks to Prof.\@ Dr.\@ David Bermbach and Martin Grambow for project supervision}}
+\else
+\author{Luk Burchard %
+  \and Carsten Schubert %
+  \and Christoph Witzko %
+  \and Max Zhao %
+  \and Emily Dietrich%
+  \thanks{~Special thanks to Prof.\@ Dr.\@ David Bermbach and Martin Grambow for project supervision}}
+\fi
+%
 \date{August 17, 2020}
 \maketitle
 
