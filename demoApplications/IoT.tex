@@ -1,7 +1,7 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-\section{IoT Application (Traffic Lights Calculator)}\label{sec:webshop}
+\section{IoT Application (Traffic Lights Calculator)}\label{sec:iot}
 
 % Design Concepts
 We implemented an IoT Application managing some crossing's traffic light, 
@@ -25,7 +25,7 @@ Databases are needed for coordinating multiple functions' states
 and for tracking traffic statistics.
 
 
-\subsection{Application Structure}\label{ssec:webshopApplicationStructure}
+\subsection{Application Structure}\label{ssec:iotApplicationStructure}
 
 \begin{figure}
 \begin{center}
@@ -46,29 +46,29 @@ and for tracking traffic statistics.
   \textbf{Function} & \multicolumn{1}{c}{\textbf{Description}}\\ 
   \toprule
   %\endhead{}%
-  trafficsensorfilter & \makecell[l]{Filters incoming traffic sensor data (e.g.\@ car speeds and directions), \\
+  trafficsensorfilter & \makecell[{{p{11cm}}}]{Filters incoming traffic sensor data (e.g.\@ car speeds and directions),
     removing erroneous inputs.}\\
   \midrule[0.02em]
-  objectrecognition & \makecell[l]{Analyses an uploaded camera image and detects different vehicles.}\\
+  objectrecognition & \makecell[{{p{11cm}}}]{Analyses an uploaded camera image and detects different vehicles.}\\
   \midrule[0.02em]
-  weathersensorfilter & \makecell[l]{Filters incoming weather sensor data, removing erroneous inputs.}\\
+  weathersensorfilter & \makecell[{{p{11cm}}}]{Filters incoming weather sensor data, removing erroneous inputs.}\\
   \midrule[0.02em]
-  movementplan & \makecell[l]{Uses database to aggregate found objects with their traffic attri- \\
-    butes. Submits to setlightphasecalculation.}\\
+  movementplan & \makecell[{{p{11cm}}}]{Uses database to aggregate found objects with their traffic attributes. 
+    Submits to setlightphasecalculation.}\\
   \midrule[0.02em]
-  emergencydetection & \makecell[l]{Sends emergency status to setlightphasecalculation if respective \\
+  emergencydetection & \makecell[{{p{11cm}}}]{Sends emergency status to setlightphasecalculation if respective 
     objects were detected.}\\
   \midrule[0.02em]
-  roadcondition & \makecell[l]{Evaluates (and scores) current road condition according to \\
+  roadcondition & \makecell[{{p{11cm}}}]{Evaluates (and scores) current road condition according to 
     incoming weather data. Submits to setlightphasecalculation.}\\
   \midrule[0.02em]
-  trafficstatistics & \makecell[l]{Saves seen objects to database for potential future analysis.}\\
+  trafficstatistics & \makecell[{{p{11cm}}}]{Saves seen objects to database for potential future analysis.}\\
   \midrule[0.02em]
-  setlightphasecalculation & \makecell[l]{Aggragates all received input in database. Perpetually \\
-    calculates light phases and updates traffic light in database. \\
+  setlightphasecalculation & \makecell[{{p{11cm}}}]{Aggragates all received input in database. 
+    Perpetually calculates light phases and updates traffic light in database. 
     Responds to emergencies immediately (i.e.\@ without wait).}\\
   \midrule[0.02em]
-  getlightphasecalculation & \makecell[l]{Returns current light phase.}\\
+  getlightphasecalculation & \makecell[{{p{11cm}}}]{Returns current light phase.}\\
   \midrule[0.02em]
   \bottomrule
 \end{longtable}
@@ -82,10 +82,10 @@ There, each function has its own I/O behaviour (including individual examples) d
 
 
 
-\subsection{Benchmarking Properties}\label{ssec:webshopApplicationProperties}
+\subsection{Benchmarking Properties}\label{ssec:iotApplicationProperties}
 
 
-\subsection{Specific Workloads}\label{ssec:webshopSpecificWorkloads}
+\subsection{Specific Workloads}\label{ssec:iotSpecificWorkloads}
 
 
 \end{document}
