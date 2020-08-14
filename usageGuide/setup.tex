@@ -9,7 +9,7 @@ In this chapter, the experiment setup process will be explained.
 The first necessary step is to clone the GitHub repository to your local machine with 
 \texttt{git clone git@github.com:FaaSterMetrics/experiments.git}. 
 
-Next, our prebuild Docker image (\texttt{faastermetrics/experiments}) can be started to setup the providers and conduct the experiments. 
+Next, our prebuilt Docker image (\texttt{faastermetrics/experiments}) can be started to setup the providers and conduct the experiments. 
 This has the advantage that only Docker (min.\@ version 19.03.8) needs to be installed on the local machine. 
 To start the container run \texttt{./docker/run.sh}. 
 This will start the container and launch a bash shell in which all commands can be executed.
@@ -36,7 +36,7 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
 \item Click \texttt{Generate Private Key} and download it as~.json we need the absolute path to the file later.
 \item Visit \texttt{https://console.developers.google.com/apis/api/cloudfunctions.\\
   googleapis.com/overview?project=<project\_name>} and enable the API.\@
-\item Execute the following: 
+\item Add the following to your environment e.g.\@ .bashrc: 
   \begin{tcolorbox}
     \texttt{export GOOGLE\_APPLICATION\_CREDENTIALS=<path/to/privatekey.json>}\\
     \texttt{export GOOGLE\_PROJECT=<project\_name>}\\
@@ -50,7 +50,7 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
 \item Create a new user.
 \item Choose ``Programmatic access''.
 \item Go to ``Attach existing policies directly'' and choose ``AdministratorAccess''.
-\item Execute the following: 
+\item Add the following to your environment e.g.\@ .bashrc: 
   \begin{tcolorbox}
     \texttt{export AWS\_ACCESS\_KEY\_ID=<access\_key>}\\
     \texttt{export AWS\_SECRET\_ACCESS\_KEY=<secret\_access\_key>}\\
@@ -64,7 +64,7 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
 \item Run \texttt{az login}.
 \item Run \texttt{az account list}.
 \item Choose your subscription you want to use for the deployment.
-\item Execute the following: 
+\item Add the following to your environment e.g.\@ .bashrc: 
   \begin{tcolorbox}
     \texttt{export ARM\_TENANT\_ID=<tenantId from az account list>}\\
     \texttt{export ARM\_SUBSCRIPTION\_ID=<id from az account list>}\\
@@ -74,8 +74,8 @@ For an overview of all configurable environment variables go to \Cref{sec:provid
 \subsubsection{TinyFaaS}\label{sec:providersetuptinyfaas}
 
 \begin{enumerate}
-  \item If you don't have a \texttt{tinyFaaS} instance follow the setup instructions\footnote{\url{https://github.com/FaaSterMetrics/tinyFaaS}}.
-\item Set the `TINYFAAS\_ADDRESS' environment variable. 
+  \item If you don't have a \texttt{tinyFaaS} instance follow the setup instructions\footnote{\url{https://github.com/FaaSterMetrics/tinyFaaS}} for our extended version of tinyFaaS.
+\item Set the `TINYFAAS\_ADDRESS' environment variable to the ip/hostename of your \texttt{tinyFaaS} instance. 
   Please note that `TINYFAAS\_ADDRESS' must be publically visible on the internet in order for other FaaS platforms to talk to it. 
 
   \textit{Note:} Anyone with access to the \texttt{tinyFaaS} management port (8080) will be able to upload arbitrary functions. 
@@ -91,7 +91,7 @@ The only supported setup is the one using docker-swarm\footnote{\url{https://doc
 \item Install faas-cli\footnote{\url{https://docs.openfaas.com/cli/install}} and login like the guide above details.
 \item Log your local docker into docker hub with docker login (other container registries are not directly supported by this project).
 This is needed to deploy functions to OpenFaas. Please note that by default this will make the functions you deploy to OpenFaas public on your account.
-\item Execute the following: 
+\item Add the following to your environment e.g.\@ .bashrc: 
   \begin{tcolorbox}
     \texttt{export OPENFAAS\_GATEWAY=<address of OpenFaas gateway>}\\
     \texttt{export OPENFAAS\_TOKEN=<OpenFaas password>}\\
