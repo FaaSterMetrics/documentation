@@ -14,7 +14,7 @@ The basic functionality is to display recommended products and ads to customers
 who can then buy said products by charging a mocked credit card. 
 As such, the deployed application can theoretically be ``used'' exclusively by humans 
 interacting with its website frontend within a web browser.
-Naturally, there are also pre-defined automized workloads to secure a benchmark's reproducibility.
+Naturally, there are also pre-defined automatized workloads to secure a benchmark's reproducibility.
 
 \subsection{Application Design}\label{ssec:webshopApplicationStructure}
 
@@ -124,6 +124,20 @@ There, each function has its own I/O behaviour (including individual examples) d
 
 
 \subsection{Benchmarking Properties}\label{ssec:webshopApplicationProperties}
+
+The most prominent feature of such this application from a benchmarking perspective is its high functional interdependence. 
+Many different components are meshed and require each other as outlines 
+in \Cref{fig:webshopArchitectureDiagram} and \Cref{tab:webshopFunctionOverview}.
+
+The webshop also features a non-homogenous request system: 
+Since different users' behavior is dissimilar by nature 
+(some may like to browse a lot whereas others just buy everything they are recommended instantly), 
+so are the various requests the webshop has to deal with simultaneously.
+
+Other characteristic properties are a rather read-heavy behaviour in general 
+(there is much required input data from various sources) 
+and thus a sizable response to customers (e.g.\@ pictures, web design). 
+Also, the functionality depends on a single database, representing real-world state-locking.
 
 
 \subsection{Specific Workloads}\label{ssec:webshopSpecificWorkloads}
