@@ -12,7 +12,7 @@ To this end, Node.js and its module semantics are used. A typical function may l
 \begin{minted}{js}
   const lib = require('@faastermetrics/lib')
   module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
-    return {result: 'Hello Blubb'}
+    return {result: 'Hello World'}
   })
 \end{minted}
 \end{tcolorbox}
@@ -118,17 +118,16 @@ See also \Cref{fig:routerFullFunctionalityExample} for a complete rpcHandler exa
 
 \subsection{Calling Other FaaS Functions}\label{sub:functionCallingOther}
 
-In order to build applications out of FaaS functions and later analyse their performance,
-it is crucial for one function to be able to call another one.
-Within the wrapped user function, this can easily be achieved via the \mintinline{js}{ctx} function parameter.
-Thereby, logs containing all kinds of relevant information about those functions and their calling process (see ---TODO:\@ redacted---)
-are generated automatically for future analysis.
+In order to build applications out of FaaS functions and later analyse their performance, it is crucial for one function to be able to call another one.
+While doing this our framework needs to generate logs containing all kinds of relevant information about those functions and their calling process. 
+
+Within the wrapped user function, this can be achieved by using a member function of the passed \mintinline{js}{ctx} object.
 
 When an rpcHandler is used as function wrapper, other functions are simply called via
 \mintinline{js}{ctx.call('functionName', functionPayload)},
 where the used arguments represent name and event object (i.e.\@ payload) of the called function.
 Within a router, use \mintinline{js}{ctx.lib.call('functionName', functionPayload)} instead.
-Also, since functions are typically asynchronous, it may be necessary to \mintinline{js}{await} those calls.
+Also, since functions are typically asynchronous, it is often necessary to \mintinline{js}{await} those calls.
 
 Complete examples of user functions which call other functions are shown in 
 \Cref{fig:rpcHandlerFullFunctionalityExample,fig:routerFullFunctionalityExample}.
@@ -136,7 +135,7 @@ Complete examples of user functions which call other functions are shown in
 \subsection{Database Access}\label{sub:functionDBAccess}
 
 If you have configured a redis database for an experiment (see ---TODO:\@ redacted--- for how to do this),
-this database becomes available to a function by passing an option struct to the respective function wrapper.
+this database becomes available to a function by passing an option object to the respective function wrapper.
 Assuming that database is called \mintinline{json}{"redis"} within the \texttt{experiment.json} config file,
 this means a JavaScript object of the form \mintinline{js}{{db: 'redis'}} has to be given to the used function wrapper
 as first argument --- additionally to the function or koa router to be wrapped, which then embodies the second argument.
