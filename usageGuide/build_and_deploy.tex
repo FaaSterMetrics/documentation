@@ -12,5 +12,5 @@ To build your experiment run \texttt{npm run build <experiment name>}.
 If the experiment is now successfully built, the next step is to deploy the functions and services to the cloud providers. A service is for example a key-value database like redis\footnote{https://redis.io/}. \\
 To interact with the different cloud providers, we use `terraform`\footnote{https://www.terraform.io/} from HashiCorp\footnote{https://www.hashicorp.com/}. Terraform is a cloud infrastructure automation tool that allows us to create, update, or delete cloud resources with declarative configuration files. This functionality is essential in terms of reproducibility and predictability.\\
 The developed deployment script detects the cloud providers that need to be provisioned by `terraform` and executes the matching `terraform` configuration files.\\
-To deploy your experiment run \texttt{npm run deploy <experiment name>}.
+To deploy your experiment run \texttt{npm run deploy <experiment name>}.\\
 \end{document}
