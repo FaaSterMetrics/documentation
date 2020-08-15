@@ -1,0 +1,320 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Data Analysis Setup}
+
+\begin{figure}
+  System software requirements:
+  \begin{enumerate}
+    \item python 3.8 or later, with working pip support
+    \item graphviz 2.40 or later
+  \end{enumerate}
+  Python package requirements:
+  \begin{enumerate}
+    \item seaborn
+    \item pygraphviz
+    \item networkx *
+    \item argmagic *
+    \item json\_coder *
+  \end{enumerate}
+  \caption[Required Dependencies for the Analysis Tools]%
+  {Required Dependencies for the Analysis Tools. 
+  Packages marked with * should already be installed with the FaasterMetrics package setup.}%
+  \label{fig:analysisRequiredSetupTools}
+\end{figure}
+
+
+The analysis processing tools require a working installation of python 3.8, 
+as well as the ability to install additional python packages via pip. 
+For graph processing and visualizations graphviz will need to be installed on the system, 
+either via a system package manager or manually. 
+The full dependency list is shown in \Cref{fig:analysisRequiredSetupTools}
+
+To get those dependencies, you may choose to employ a convenient setup via our provided dockerfile (\Cref{sub:analysisDockerSetup}),
+use conda (\Cref{sub:analysisCondaSetup}, a respective environment file is also provided) or setup manually (\Cref{sub:analysisManualSetup}).
+Whichever way you prefer, you can find everything you will need in our analysis code repository%
+\footnote{\url{https://github.com/FaaSterMetrics/analysis}}.
+
+\subsection{Installation via Docker setup}%
+\label{sub:analysisDockerSetup}
+
+This requires a working docker setup on the local system. 
+Make sure the executing user has proper permissions for calling the docker daemon.
+First build a base image with the name \texttt{fmanalysis}, or replace accordingly, in the analysis root directory:
+\begin{tcolorbox}
+  \mintinline{bash}{docker build -t fmanalysis}
+\end{tcolorbox}\noindent
+Afterwards this image can for example be used for executing the scripts interactively by starting a container with a mounted output directory:
+\begin{tcolorbox}
+  \mintinline{bash}{docker run -it fmanalysis -v output:/analysis/output}
+\end{tcolorbox}
+
+\subsection{Installation via Conda setup}%
+\label{sub:analysisCondaSetup}
+
+Conda allows for simple installation and management of an environment, which can contain alternative python versions. 
+This allows for easier deployment on systems where a compatible python version is not included in the base system or system package repositories. 
+
+Refer to the official conda documentation for setting up a basic conda installation%
+\footnote{\url{https://docs.conda.io/en/latest/miniconda.html}}. 
+Miniconda refers to a minimal version of conda without additional scientific packages. 
+This version is sufficient for usage with our documentation.
+
+After installation of conda, the \texttt{environment.yml} in our analysis repository can be used to set up a new conda environment:
+\begin{tcolorbox}
+  \mintinline{bash}{conda env create -f environment.yml}
+\end{tcolorbox}\noindent
+This will create a new environment with the name \texttt{faastermetrics2} (assumed for following commands). 
+This name can be changed in the \texttt{environment.yml} file via its name entry.
+
+In order to work inside the newly installed environment, it needs to be activated:
+\begin{tcolorbox}
+  \mintinline{bash}{conda activate faastermetrics2}
+\end{tcolorbox}\noindent
+Now the faastermetrics library can be installed via:
+\begin{tcolorbox}
+  \mintinline{bash}{python setup.py install}
+\end{tcolorbox}\noindent
+Alternatively, for a development install use:
+\begin{tcolorbox}
+  \mintinline{bash}{python setup.py develop}
+\end{tcolorbox}\noindent
+This will install the library into the conda environment. 
+\texttt{graphviz} still needs to be installed on the host system, 
+as conda installed \texttt{graphviz} might not work depending on local configuration.
+
+\subsection{Direct local setup}%
+\label{sub:analysisManualSetup}
+
+This assumes a supported python implementation and graphviz library have been installed through other means. 
+Installing third-party python libraries through pip should also be supported. 
+Based on the usage requirements the FaasterMetrics library can either be installed directly or in development mode. 
+
+For direct installation execute \texttt{python setup.py install} in the analysis base directory. 
+Conversely \texttt{python setup.py develop} can be used for a development install. 
+The latter allows changes to the library to be directly reflected in executed code without reinstallation,
+thus being preferred for development usage.
+\texttt{seaborn} and \texttt{pygraphviz} are only needed as dependencies for specific visualisation scripts 
+and need to be installed manually, such as via pip:
+\begin{tcolorbox}
+  \mintinline{bash}{pip install seaborn pygraphviz}
+\end{tcolorbox}
+
+\section{Basic Analysis Tools Usage}
+
+The analysis repository\footnote{\url{https://github.com/FaaSterMetrics/analysis}}
+contains scripts for performing roughly the following actions:
+\begin{enumerate}
+  \item Log import (process raw experiment output data into analysis intermediary format)
+  \item Export clean log data (i.e.\@ as CSV)
+  \item Additional processing, such as grouping log entries based on function and request
+  \item Visualization of call structure and basic performance comparisons
+\end{enumerate}
+After log import, the intermediary data version is used for all other procedures. 
+The~following sections will elaborate on the aforementioned actions.
+
+\subsection{Experiment Log Import}%
+\label{sub:analysisUsageLogImport}
+
+Logging output from experiments should be saved according to --TODO:\@ redacted--.
+\texttt{scripts/dump\_logs.py} can be used to extract relevant log entries and store these into a structured .json file.
+In order to just dump all logs from an experiment's log output folder into a single \texttt{logs.json} execute:
+\begin{tcolorbox}
+  \mintinline{bash}{./scripts/dump_logs.py <experiment_logs> ./logs.json}
+\end{tcolorbox}\noindent
+The generated json file will now contain all log entries generated by the experiment framework in individual objects.
+
+If the input experiment log folder contains a \texttt{deployment\_id.txt}, 
+this ID within will be used to automatically remove any log entries without the same ID. 
+This should be sufficient to ensure that log entries are compatible and from the same experiment in most cases.
+
+In some situations the raw experiment output might still contain entries from multiple experiment runs or
+older entries with incompatible log format. 
+For these purposes \texttt{dump\_logs} supports filtering loggging entries both on lib version and a time window:
+
+\begin{tcolorbox}
+  \mintinline{bash}{./scripts/dump_logs.py --version 7.0.1 <experiment_logs> ./logs.json}
+\end{tcolorbox}\noindent
+With this, only include log entries with a lib version of 7.0.1 are included. 
+This can be useful for removing entries from incompatible lib versions.
+\begin{tcolorbox}
+  \mintinline{bash}{./scripts/dump_logs.py --timewindow 1h <experiment_logs> ./logs.json}
+\end{tcolorbox}\noindent
+With this, all entries younger than 1 hour from the most recent entry in the experiment logs are included.
+
+The convenience script \texttt{./scripts/list\_logs.py} can be used on the raw experiment output folder 
+to discover valid experiment folders and contained lib versions.
+
+\subsection{Export to CSV}%
+\label{sub:analysisUsageCSVExport}
+
+Continuing from a log dumped to a local \texttt{logs.json}, \texttt{scripts/export.py} allows for generating a CSV file, 
+which contains each log entry as a separate line that can be used for the analysis of logs in third-party tools.
+In order to the export a \texttt{json} intermediary into a \texttt{logs.csv} the following line can be used:
+\begin{tcolorbox}
+  \mintinline{bash}{./scripts/export.py ./logs.json ./logs.csv}
+\end{tcolorbox}\noindent
+
+Accordingly, the complete steps in order to convert an raw experiment output into a CSV could be as follows:
+\begin{tcolorbox}
+\begin{minted}{bash}
+./scripts/dump_logs.py <experiment_logs> ./logs.json
+./scripts/export.py ./logs.json ./logs.csv
+\end{minted}
+\end{tcolorbox}
+
+\subsection{Obtaining Context IDs}%
+\label{sub:analysisUsageContextIDs}
+
+The script \texttt{analysis\_function\_tree.py} performs a basic call graph analysis on a given logfile
+and outputs function structure and context IDs in textual form. 
+This can for example be used for specific plotting of context ID call graphs.
+An example output from our webshop demo application is shown in \Cref{fig:contextIDExtractExample}.
+
+\begin{figure}
+\begin{tcolorbox}
+  \begin{minted}[autogobble]{js}
+  Keep with context ids only: 208/209
+  = Calltree induced on: frontend =
+  frontend: calls: 34 : {
+    'c7q2dkyh', '81yfer69', 'oczsa428', 'pxnt022y', 'hf7dh8ms', 
+    'qi33oz6w', 'uo63pgyq', 'miwpan1j', 'f5b9e4cu', 'fngs9lsy', 
+    'vbt14juu', 'whgikujo', 'd2w0dn2o', 'z134z9v9', 't2e4jgl8', 
+    'z116208c', 's7i5zszq', '2ycw9he5', 'slqlq3r5', '8kx8ogib', 
+    'ukjlfqrt', '4n1791ob', 'fwqlcc4j', 'fuii60dd', 'yt8msp7u', 
+    'ubk7slf2', 'tc9rpims', 'fbpyvyeb', 'q56ouw0u', '28yq2d0f', 
+    'tiaei0k0', 'urirfiab', '77rui7sx', 'co5hxyoy'}
+    supportedcurrencies: calls: 24 :
+    listproducts: calls: 18 :
+    getads: calls: 18 :
+    currency: calls: 49 :
+  [...]
+  \end{minted}
+\end{tcolorbox}
+\caption[Function Tree Script Example]{%
+  Shorted example output of the \texttt{analysis\_function\_tree.py} script for 
+  an experiment run of our webshop demo application.
+  Calls and their respective context IDs can be user for future analysis this way.%
+}
+\label{fig:contextIDExtractExample}
+\end{figure}
+
+\subsection{Visual Analysis and Processing}%
+\label{sub:analysisUsageVisualProcessing}
+
+The \texttt{plots} directory contains two visualization scripts, 
+which can be used to obtain both a per-function execution time overview and 
+a graph of either function calls with average execution times or individual call trees based on parsing of context IDs or X-Pairs TODO:\@ ref.
+
+\texttt{plots/execution\_time.py} only takes two arguments, one for the input json 
+log dump data and its output directory (where generated plots will be stored).
+Example usage:
+\begin{tcolorbox}
+\begin{minted}{bash}
+python plots/execution_time.py ./logs.json ./output/plots
+\end{minted}
+\end{tcolorbox}\noindent
+With this, you generate a set of execution time output plots in the output directory \texttt{output/plots}. 
+Characteristics of the individual visualisations will be discussed in TODO ref:executiontime.
+
+\texttt{plots/function\_graph.py} provides graphviz-based visualisations 
+of the graph model generated by the faastermetrics analysis library.
+The standard functionality will generate a function graph with calls as edges and functions as nodes. 
+Average execution times for both calls and functions are shown.
+Example usage:
+\begin{tcolorbox}
+\begin{minted}{bash}
+python plots/function_graph.py ./logs.json ./output/plots
+\end{minted}
+\end{tcolorbox}\noindent
+
+
+The scripts per-default provides two different styles, either `classic' (default) or `modern'. 
+These change the appearance of the generated graph and can be modified within the scripts, 
+by changing the \texttt{STYLES} dictionary accordingly. 
+For selecting the style, just use a respective command-line option:
+\begin{tcolorbox}
+\begin{minted}{bash}
+# classic default style plots
+python plots/function_graph.py --style classic ./logs.json 
+./output/plots
+
+# generate modern style plots
+python plots/function_graph.py --style modern ./logs.json 
+./output/plots
+\end{minted}
+\end{tcolorbox}
+
+The option `--notime` removes time labels from the graph. 
+A clean function graph in modern style without time labels is thus generated by the following:
+\begin{tcolorbox}
+\begin{minted}{bash}
+python plots/function_graph.py --style modern --notime ./logs.json 
+./output/plots
+\end{minted}
+\end{tcolorbox}
+
+%These options only change the visual styling of the graphviz plotting, 
+%the content presentation remains the same. 
+Multiple other options are provided to change the function tree presentation. 
+These include the ability to filter on specific function nodes or specific context IDs.
+
+The options \texttt{--ftree}, \texttt{--degree}, and \texttt{--functions} include/exclude nodes based on specific criteria.
+
+\texttt{--ftree} accepts a function name as a parameter and will print a function tree including all nodes connected with the given function.
+In order to generate a function graph containing only nodes related with `cartkvstorage` the following could be used:
+\begin{tcolorbox}
+\begin{minted}{bash}
+python plots/function_graph.py --ftree cartkvstorage ./logs.json 
+./output/plots
+\end{minted}
+\end{tcolorbox}
+
+\texttt{--degree} excludes nodes with degree equal or lower than the given value. 
+This can be useful to debulk a very large function graph.
+The following will remove all leaf nodes in our function graph:
+\begin{tcolorbox}
+\begin{minted}{bash}
+python plots/function_graph.py --degree 1./logs.json ./output/plots
+\end{minted}
+\end{tcolorbox}
+
+
+
+\texttt{--functions} can be used to explicitly list a number of functions to be included. 
+Only these nodes will be used to contruct the graph. Edges will only be drawn, 
+if both nodes are in the graph. 
+No inducing behavior is performed for nodes with some higher degree of separation.
+
+The following generates a graph containing only the functions `frontend' and `checkout'.
+\begin{tcolorbox}
+\begin{minted}{bash}
+python plots/function_graph.py --functions '[frontend,checkout]' 
+./logs.json ./output/plots
+\end{minted}
+\end{tcolorbox}
+
+As an alternative to building the graph based on function names, 
+which merge calls from different requests, 
+the graph can also be used to visualize entirely based on individual calls. 
+For this functionality a specific context ID needs to be given.
+
+As an example, the following would generate the specific call tree for context ID 123456:
+\begin{tcolorbox}
+\begin{minted}{bash}
+python plots/function_graph.py --context 123456 ./logs.json 
+./output/plots
+\end{minted}
+\end{tcolorbox}
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
