@@ -1,8 +1,8 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-\section{Build and Deploy}\label{sec:buildanddeploy}
-In this section, the build and deployment process of an experiment is explained. Please ensure that your `experiment.json` file is configured correctly (TODO: cref). All required providers need to be set up correctly (\Cref{sec:providersetup}).
+\section{Build, Deploy and Destroy}\label{sec:builddeployanddestroy}
+In this section, the build and deployment and finally destruction process of an experiment is explained. Please ensure that your `experiment.json` file is configured correctly (TODO: cref). All required providers need to be set up correctly (\Cref{sec:providersetup}).
 
 \subsection{Build}\label{sec:build}
 Before deploying the experiment to the different cloud providers, it is essential to build the application. This step compiles the JavaScript files and generates the deployment artifacts. These artifacts are zip files containing the compiled code and the assets. They are needed in the following deployment step. For compiling the JavaScript files, ncc\footnote{https://github.com/vercel/ncc} from vercel\footnote{https://vercel.com/} is used and allows us to build a single JavaScript file containing the function code and all npm dependencies.\\
@@ -13,4 +13,19 @@ If the experiment is now successfully built, the next step is to deploy the func
 To interact with the different cloud providers, we use `terraform`\footnote{https://www.terraform.io/} from HashiCorp\footnote{https://www.hashicorp.com/}. Terraform is a cloud infrastructure automation tool that allows us to create, update, or delete cloud resources with declarative configuration files. This functionality is essential in terms of reproducibility and predictability.\\
 The developed deployment script detects the cloud providers that need to be provisioned by `terraform` and executes the matching `terraform` configuration files.\\
 To deploy your experiment run \texttt{npm run deploy <experiment name>}.\\
+
+% missing: destroy, (logs, analysis) (probably in analysis description?)
+\subsection{Destroy}\label{sec:destroy}
+After you're done experimenting or want a clean state, it is time to release all the allocated resources from the cloud providers.
+This task will completely remove all resources allocated by the \texttt{deploy} command. 
+
+This command should be used after being done experimenting to avoid unnecessary costs and clutter on the cloud providers.
+It should also be used in between experiment runs to ensure a clean state.
+However, running \texttt{deploy} again while the experiment is already deployed will automatically free any unused/outdated resources so during development destroying the experiment often isn't necessary.
+
+\textit{Note:} Be sure to fetch logs \textit{before} destroying the experiment. TODO: Reference log fetching\\
+To destroy your experiment run \texttt{npm run destroy}.\\
+
+
+
 \end{document}
