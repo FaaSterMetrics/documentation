@@ -9,7 +9,7 @@ To this end, Node.js and its module semantics are used. A typical function may l
 
 \begin{figure}[H]
 \begin{tcolorbox}
-\begin{minted}{js}
+\begin{minted}[autogobble]{js}
   const lib = require('@faastermetrics/lib')
   module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
     return {result: 'Hello World'}
@@ -40,7 +40,7 @@ In such cases, we suggest to utilize Node.js module semantics as shown in \Cref{
 \begin{figure}
 \begin{tcolorbox}[left=3mm, right=3mm, top=3mm]
   \begin{tcolorbox}[titleDetachedStyle, title=\texttt{{[\ldots]/exampleFunction/data.js}}]
-  \begin{minted}{js}
+  \begin{minted}[autogobble]{js}
   const prices = {
     umbrella: 20,
     coat: 60,
@@ -52,7 +52,7 @@ In such cases, we suggest to utilize Node.js module semantics as shown in \Cref{
   \end{tcolorbox}
 
   \begin{tcolorbox}[titleDetachedStyle, title=\texttt{{[\ldots]/exampleFunction/index.js}}]
-  \begin{minted}{js}
+  \begin{minted}[autogobble]{js}
   const { prices } = require('./data')
   const lib = require('@faastermetrics/lib')
 
@@ -184,7 +184,7 @@ you can create it with \mintinline{js}{lib.helper.generateRandomID()} (which use
 
 \begin{figure}
 \begin{tcolorbox}
-\begin{minted}{js}
+\begin{minted}[autogobble]{js}
   const lib = require('@faastermetrics/lib')
   module.exports = lib.serverless.rpcHandler(
     { db: 'redis' }, async (event, ctx) => {
@@ -217,7 +217,7 @@ you can create it with \mintinline{js}{lib.helper.generateRandomID()} (which use
 
 \begin{figure}
 \begin{tcolorbox}
-\begin{minted}{js}
+\begin{minted}[autogobble]{js}
   const lib = require('@faastermetrics/lib')
   module.exports = lib.serverless.router(
     { db: 'redis' }, async router => {
