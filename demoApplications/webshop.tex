@@ -188,8 +188,8 @@ Very many people visit the shop, but most of them only enjoy window-shopping.
 They basically visit the shop only to compare its special offers to those of other webshops
 and then just go for the other shop or none at all.
 
-Thus, this profile is rather similar to the first (\Cref{ssub:webshopProfileHighTraffic}),
-but the ratio of deep to shallow calls is much more favored towards the former.
+Thus, this profile is rather similar to the first one (\Cref{ssub:webshopProfileHighTraffic}),
+but the ratio of deep to shallow calls is much more favoured towards the former.
 This means, that nearly all load lies on the frontend and the functions it directly calls.
 Functions like checkout, payment or even the external database are hardly used at all.
 
@@ -202,13 +202,13 @@ The profile can be found in the repository's webservice directory as
 \label{ssub:webshopProfileRegularMorning}
 
 This workload profile tries to represent a regular weekday morning: 
-The later it gets, the more people wake up and each one of them realizes they needed to buy exactly one product.
-Thus, they go exactly for this one product only and then leave for work.
+The further time advances, the more people wake up and each one of them realizes they need to buy exactly one product.
+Hence, they checkout this single product and then leave for work.
 
 This profile is most interesting if one wants to test all functions and the database in a rather similar number.
 Since each customer buys exactly one product (deep function calls, triggering whole checkout process),
 all functions are used. 
-Obviously, the frontend still carries a (constant times) higher load than the other functions, 
+Naturally, the frontend still carries a (constant times) higher load than the other functions, 
 since it has to process and forward each user request.
 
 The profile can be found in the repository's webservice directory as 
