@@ -155,20 +155,23 @@ The workload generation and its parameters are discussed in TODO oof.
 
 \section{Experiment Configuration}\label{sec:experimentConfig}
 
-An experiment is defined by a program and its workload. 
+An experiment is defined by a program and its services. 
 In this section, we discuss how to make an experiment reproducible. 
 
-To limit changes between experiments, the program shall be deployed in the same way on the same platforms 
+To limit changes between experiments, the program and optionally a database shall be deployed in the same way on the same platforms, 
 and the workload executed onto the program shall be the same. 
-Thus, the kind of workload and all information about which deployment configuration 
+Thus, the kind of workload and all information about which deployment configuration
 to use per function in a program within an experiment is declared in an experiment.json config file.
 
 \begin{figure}
   \begin{tcolorbox}
     \begin{minted}[autogobble]{json}
     {
-      "workload": {
-        "config": "./workload.yml"
+      "services": {
+        "redis": {},
+        "workload": {
+          "config": "./workload.yml"
+        }
       },
       "program": {
         "frontend": {
@@ -189,7 +192,7 @@ Therein, we have two functions: \texttt{frontend} and \texttt{currency}. The for
 
 An example of an \texttt{experiment.json} is shown in \Cref{fig:exampleExperimentConfig}.
 The~.json as file extension already indicates a JSON structured text file which follows a specific scheme. 
-The general hierarchy is split between workload and program definition.
+The general hierarchy is split between service and program definition.
 
 The program is  composed of the set of functions with the name as their key in the first level, 
 this ensures the uniqueness of the function names. 
@@ -212,7 +215,7 @@ The functions each lie in separate directories, each in their respective \texttt
 \dirtree{%
 .1 experiments.
 .2 <experiment\_name>.
-.3 experiment.json <- describes program and workload.
+.3 experiment.json <- describes program and services.
 .3 functions.
 .4 <function\_1>.
 .5 index.js.
