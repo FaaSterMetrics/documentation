@@ -74,7 +74,7 @@ In such cases, we suggest to utilize Node.js module semantics as shown in \Cref{
 In order to use the capabilities of our framework, user functions always have to be exported and wrapped.
 This is already depicted in the examples above where the user function is exported within our library's `rpcHandler'.
 It allows us to integrate them into our unified deployment process and to add our own control data (e.g.\@ for later analysis).
-Internally, \texttt{koajs}\footnote{\url{https://koajs.com}} is used as middleware. See -TODO:\@ redacted- for details.
+Internally, \texttt{koajs}\footnote{\url{https://koajs.com}} is used as middleware. 
 
 \subsubsection{`rpcHandler'}%
 \label{ssub:rpcHandler}
@@ -135,8 +135,11 @@ Complete examples of user functions which call other functions are shown in
 
 \subsection{Database Access}\label{sub:functionDBAccess}
 
-If you have configured a redis database for an experiment (see ---TODO:\@ redacted--- for how to do this),
-this database becomes available to a function by passing an option object to the respective function wrapper.
+Experiments can use an external redis database.
+The only preliminary step for its usage is having a working AWS provider setup (\Cref{ssub:providersetupaws}),
+since our deployment process uses an AWS `EC2' instance for this redis.
+
+Afterwards, the database becomes available to a function by passing an option object to the respective function wrapper.
 Assuming that database is called \mintinline{json}{"redis"} within the \texttt{experiment.json} config file,
 this means a JavaScript object of the form \mintinline{js}{{db: 'redis'}} has to be given to the used function wrapper
 as first argument --- additionally to the function or koa router to be wrapped, which then embodies the second argument.
