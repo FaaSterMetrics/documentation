@@ -3,6 +3,7 @@
 
 In this chapter, we describe the project's design principles,
 including its architectural foundation.
+%TODO
 In order to do so, we will first give a short overview over current scientific 
 research on FaaS benchmarking and thereby separate our accomplishments.
 
@@ -73,14 +74,16 @@ meaning that we do not route into multiple HTTP subpaths within a function.
 \begin{center}
   \includegraphics[width=\linewidth,keepaspectratio]{./simple-call-graph.png}
 \end{center}
-\caption[A FaaS Program's Call Graph ]{A simple FaaS program, together with its call graph.}%
+\caption[A FaaS Program's Call Graph]{A simple FaaS program, together with its call graph.}%
 \label{fig:frameworkSimpleProgramCallGraph}
 \end{figure}
 
 \section{Framework}\label{sec:Framework}
 
-With this work we introduce a comprehensive framework for running experiments 
-to generate tests and benchmark data of complex FaaS programs that are hosted and communicate between different providers. 
+With this work, we introduce a comprehensive framework for running experiments 
+to generate tests and benchmark data of complex FaaS programs that are hosted on and communicate between different FaaS providers. 
+The framework should make it possible to easily create more complex FaaS based applications which can also be benchmarked 
+across a set of different providers.
 
 We further want to make extension to novel providers by other researchers as convenient as possible. 
 Thus we are trying to keep the required amount of needed interfaces to providers small 
@@ -88,7 +91,7 @@ such that it is possible to evaluate early-stage prototypes with our framework.
 As we cannot expect all platforms to provide measurement capabilities, 
 we change the deployed program with our framework to compile measurement capabilities into the deployed code 
 such that the program is measuring itself. 
-This approach is called instrumentation and is further discussed in Section (TODO).
+This approach is called instrumentation and is further discussed in \Cref{sec:instrumentationCapabilities}.
 
 Additionally, we have extended the framework to make the setup and deployment of a program on multiple platforms automated. 
 This automatic setup is also responsible for compiling a program and configuring our instrumentation-library, 
@@ -301,14 +304,15 @@ We include all JS code into one file and inject it into the actual function file
 This way all of our dependencies and business logic are bundled into a single deployable file. 
 We use the ncc\footnote{\url{https://github.com/zeit/ncc}} project to achieve this.
 
-\section{Instrumentation of Functions}%
-\label{sec:functionInstrumentation}
+\section{Function Logging}%
+\label{sec:functionLogging}
 
 The variety of FaaS platforms poses a challenge as there is no general interface and standardization to the deployed functions. 
 The only standard interface exposed by every FaaS implementation is the HTTP serial interface. 
 It would be beneficial to send the experiment measurements over this interface. 
 However, we decided to not modify the request as this will modify the experiment as the transmission load/time 
 would be changed due to the amount of information gathered in an experiment.
+Instead, we use standard log output.
 
 \subsection{FaaS Logging Assumptions}%
 \label{sub:designLoggingAssumptions}
@@ -321,14 +325,54 @@ However, this makes it impossible to receive live experiment measurement data.
 \subsection{FaaS Logging Overhead}%
 \label{sub:designLoggingOverhead}
 
-To estimated the impact and overhead of logging, we benchmarked AWS, Azure and GCP printing performance. 
-For each test we took 20 samples to avoid fluctuations.
+Before we decided to use logging output as a generalized interface to receive messages from multiple platforms, 
+we wanted to determine the resulting overhead.
+To estimate the impact and overhead of logging, we benchmarked AWS, Azure, and GCP printing performance. 
 
-TODO figures insert
+This way, we got an overview of how performance differs depending on the provider—--using the data gathered 
+in the experiment; we later concluded that standard logging is a viable option.
+We tested log output of different sizes and different repetitions. 
+For each test, we took 20 samples to avoid fluctuations.
+We internally measured the runtime and return the time in the function response. 
+The code to reproduce the experiments can be found in our GitHub ``test'' repository%
+\footnote{\url{https://github.com/FaaSterMetrics/tests}, git version revision 01cf44}.
+
+\subsection{FaaS Logging Result}%
+\label{sub:designLoggingResult}
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=11cm, keepaspectratio]{./AWS-logging.png}\\
+  \includegraphics[width=11cm, keepaspectratio]{./Azure-logging.png}\\
+  \includegraphics[width=11cm, keepaspectratio]{./GCP-logging.png}
+\end{center}
+\caption[Results of Logging Tests on AWS, GCP and Azure]{%
+  We measured the time it took to print lines of 100, 1000, and 10000 characters to the console on three major FaaS providers. 
+  The number of lines printed are increased from 10 to 10000 to get accurate results of how well a platform performs 
+  under multiple logging statements which can occur during normal execution.
+}
+\label{fig:providerLoggingTest}
+\end{figure}
+
+For evaluating logging output performance, we considered overheads of up to 1ms as acceptable, 
+since in more complex program setups we can have recursion and in general deep call trees which will be amplified by the logging overhead. 
+Thus we do want to change the behaviour of a program by introducing arbitrary latency and 
+overhead which can lead to different performance characteristics or even errors through timeouts.
+
+Running the experiments showed us that we could observe two groups of requests behaving similarly. 
+On all platforms, except for AWS, 
+all log statements printed less than one thousand times were within our accepted interval, independent of the printed line size. 
+When narrowing the criteria we can observe that AWS only fails on big logging statements which we deem acceptable.
+Usually, we do not perform more than 10s of logging statements of a line size bigger than 10,000 characters anyway.
+
+All in all, those results (shown in \Cref{fig:providerLoggingTest}) supported our thesis and we decided to let all functions log.
+
+
 
 \section{Instrumentation Capabilities}%
 \label{sec:instrumentationCapabilities}
 
+In order to automatically measure our functions (and let them log), our library instruments its own code into those functions.
 We define a single measurement as an event, these events will be dispatched to the log stream and later get aggregated. 
 Each request in a program generates a set of measurable events from probes.
 
@@ -371,8 +415,8 @@ Theoretically, we could constructs the global context from all call pairs.
 However for simplicity, we decided to include both IDs such that searching for a global context in pre-processing is much simpler.
 An illustration is shown in \Cref{fig:contextAndPairIDs}.
 
-\subsubsection{Runtime Probes}%
-\label{ssub:runtimeProbes}
+\subsection{Runtime Probes}%
+\label{sub:runtimeProbes}
 
 \begin{figure}
   \begin{tcolorbox}
@@ -392,7 +436,7 @@ To measure the actual runtime of a function we set time probes at the beginning 
 This probe has to be present in every function, so we insert our measurement into functions as shown
 in \Cref{fig:timeMeasurementCode}. 
 
-\subsubsection{Calling Time Probes}%
+\subsubsection{Call Time Probes}%
 \label{ssub:callingTimeProbes}
 
 TODO
