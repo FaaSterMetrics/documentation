@@ -2,15 +2,85 @@
 \begin{document}
 \section{Intro}\label{sec:Intro}
 
-We have nothing to tell you, but you could look at \Cref{fig:AlignmentChartAlignmentChart} instead.
 
-\begin{figure}[h] %only use h if actually needed
-  \centering
-  \includegraphics[width=10cm,height=10cm,keepaspectratio]{alignment_chart_alignment_chart.png}%
-  \caption[Alignment Chart]{An alignment chart\protect\footnotemark. What else did you expect to see here?}% Protection is only for using a command in a caption.
-  \label{fig:AlignmentChartAlignmentChart}
-\end{figure}
-\footnotetext{\url{https://xkcd.com/2251}}
+
+
+
+
+
+\begin{longtable}{l l} 
+  \caption[FaaS Benchmarking Suite Requirements]{Our FaaS Benchmarking Suite Requirements\vspace*{1mm}}\label{tab:requirements}\\
+  \textbf{Requirement} & \textbf{Rationale}\\ 
+  \toprule
+  %\endhead{}%
+  \makecell[{{p{4cm}}}]{%
+  Support for Cross-Provider Setups
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Easy Adaptibilty to New Providers
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Application-Driven Benchmarking
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  External Database Support
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Automated Build and Deployment Process %%% Note: Once set up
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Time Measurements %%% Note: Function and Calling
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Request Tracing 
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Coldstart Detection %%% 
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Data Export to Common Format %%% 
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Simple Data Visualisation %%% Common interests like function time + call graph, technically optional
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Minimal Experiment Configuration Necessary %%% One File, declarative deployment
+  }&
+  \makecell[{{p{10cm}}}]{%
+  }\\
+  \bottomrule
+\end{longtable}
+
 
 \end{document}
 
