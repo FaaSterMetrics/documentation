@@ -30,6 +30,8 @@
 *.pdf
 *.fls
 *.pyg
+*.bcf
+*.xml
 *latexmk
 _minted-main/
 

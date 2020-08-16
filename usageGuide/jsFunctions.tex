@@ -27,8 +27,9 @@ It takes two arguments and is then passed to a so-called `rpcHandler' which gets
 \newpage{}%TODO review
 \subsection{Function Naming Convention}\label{sub:functionNaming}
 
-Each FaaS function of an experiment is found in a file named \texttt{index.js} which has its own directory within the experiment's functions folder.
-Thus, the path to the function code should end as follows (see also -TODO:\@ redacted-):%
+Each FaaS function of an experiment is found in a file named \texttt{index.js} 
+which has its own directory within the experiment's functions folder.
+Thus, the path to the function code should end as follows (see also \Cref{sec:experimentDirectoryStructure}):%
 \begin{tcolorbox}
   \texttt{[\ldots]/experiments/<experiment\_name>/functions/<function\_name>/index.js}
 \end{tcolorbox}
@@ -64,7 +65,7 @@ In such cases, we suggest to utilize Node.js module semantics as shown in \Cref{
   \end{tcolorbox}
 
 \end{tcolorbox}
-\caption{Using Node.js module semantics to split some data and a function using it into separate files.}%
+\caption[Node.js Module Semantics Example]{Using Node.js module semantics to split some data and a function using it into separate files.}%
 \label{fig:dividingDataAndFunctionCodeNodeJS}
 \end{figure}
 
@@ -206,7 +207,7 @@ you can create it with \mintinline{js}{lib.helper.generateRandomID()} (which use
   )
 \end{minted}
 \end{tcolorbox}
-\caption{%
+\caption[RPCHandler Full Capabilities]{%
   A simple function showcasing all library capabilities within an rpcHandler.
   We expect that there are two other deployed functions `add' and `multiply',
   which return the sum and product of two numbers \mintinline{js}{a} and \mintinline{js}{b}, respectively.
@@ -242,7 +243,7 @@ you can create it with \mintinline{js}{lib.helper.generateRandomID()} (which use
   )
 \end{minted}
 \end{tcolorbox}
-\caption{%
+\caption[Router Wrapper Full Capabilities]{%
   The same functionality as in \Cref{fig:rpcHandlerFullFunctionalityExample}, 
   but using the router function wrapper instead of the rpcHandler.
   It can also be called by executing the command in \Cref{fig:curlExampleCall} 
@@ -258,10 +259,11 @@ you can create it with \mintinline{js}{lib.helper.generateRandomID()} (which use
   curl --header "Content-Type: application/json" --data '{"a":10,"b":5}' 
   <platform_endpoint>/<function_name>/call\end{verbatim}
   \end{tcolorbox}
-  \caption{Example \texttt{curl} shell command for calling the functions of 
-  \Cref{fig:rpcHandlerFullFunctionalityExample,fig:routerFullFunctionalityExample}}
+  \caption[curl Example for Calling Deployed Functions]{%
+  Example \texttt{curl} shell command for calling the functions of 
+  \Cref{fig:rpcHandlerFullFunctionalityExample,fig:routerFullFunctionalityExample}.
   Of course, \texttt{<platform\_endpoint>/<function\_name>} has to be replaced according to 
-  where the function is deployed and how it is named.\label{fig:curlExampleCall}
+  where the function is deployed and how it is named.\label{fig:curlExampleCall}}
 \end{figure}
 
 
