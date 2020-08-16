@@ -1,8 +1,29 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-In this chapter, we will describe the project's design principles,
+In this chapter, we describe the project's design principles,
 including its architectural foundation.
+In order to do so, we will first give a short overview over current scientific 
+research on FaaS benchmarking and thereby separate our accomplishments.
+
+% TODO not in intro?
+% TODO FaaS APPLICATIONS?
+\section{Background and current Landscape}\label{sec:background}
+
+Serverless cloud computing platforms (FaaS) such as AWS Lambda, Google Cloud Functions or Azure Functions 
+have garnered considerable commercial and scientific interest through the promise of removing deployment concerns from the developer. 
+That~platform-centric approach provides considerable challenges in evaluating performance behavior between different workloads and platforms. 
+Thus far there is no single established approach for designing FaaS application benchmarks or an established set of metrics 
+to evaluate characteristics such as performance or reliability.
+
+Previous contributions have established approaches for analyzing across multiple platforms \cite{malawski_benchmarking_2018}, 
+big-data workloads \cite{kuhlenkamp_evaluation_2019} and system characteristics such as platform elasticity \cite{kuhlenkamp_benchmarking_2020}. 
+While the number of contributions has risen considerably over the last few years, 
+a~review by \textcite{kuhlenkamp_benchmarking_2018} identified a number of challenges both in regards to workload and problem formulation, 
+as well as metrics analyzed, that have still not been sufficiently evaluated.
+
+While recent works \cites{kuhlenkamp_benchmarking_2020,van_eyk_beyond_2020} have made considerable strides towards these topics, 
+a~framework for both building and evaluating performance in FaaS-platforms has still not yet been established.
 
 % TODO Background
 \section{Function as a Service}\label{sec:FaaS}
@@ -128,7 +149,7 @@ As shown in \Cref{fig:experimentWorkflowDiagram}, our experiments follow certain
 \end{enumerate}
 In \Cref{chap:analysis} we introduce our analysis tools, which are responsible for 
 extracting data from the logs and further to produce measurement results from the extracted data.
-The workload generation and its parameters are discussed in TODO.
+The workload generation and its parameters are discussed in TODO oof.
 
 \section{Experiment Configuration}{sec:experimentConfig}
 
@@ -141,13 +162,12 @@ Thus, the kind of workload and all information about which deployment configurat
 to use per function in a program within an experiment is declared in an experiment.json config file.
 
 \begin{figure}
-\begin{center}
   \begin{tcolorbox}
     \begin{minted}[autogobble]{json}
     {
       "workload": {
         "gcp": {
-          "artillery" : {...}
+          "artillery" : {}
         }
       },
       "program": {
@@ -162,14 +182,13 @@ to use per function in a program within an experiment is declared in an experime
     }
     \end{minted}
   \end{tcolorbox}
-\end{center}
 \caption[experiment.json Config Example]{An example \texttt{experiment.json} file. 
 Therein, we have two functions: \texttt{frontend} and \texttt{currency}. The former calls the latter.}%
 \label{fig:exampleExperimentConfig}
 \end{figure}
 
 An example of an \texttt{experiment.json} is shown in \Cref{fig:exampleExperimentConfig}.
-The .json as file extension already indicates a JSON structured text file which follows a specific scheme. 
+The~.json as file extension already indicates a JSON structured text file which follows a specific scheme. 
 The general hierarchy is split between workload and program definition.
 
 The program is  composed of the set of functions with the name as their key in the first level, 
@@ -179,7 +198,7 @@ on which platform to put a function.
 Each function also states their callee functions they intend to invoke during execution in the \mintinline{json}{"calls"} field. 
 In case of recursion the function shall list itself. 
 
-\section{<{1:Experiment Directory Structure}%
+\section{Experiment Directory Structure}%
 \label{sec:experimentDirectoryStructure}
 
 \Cref{fig:experimentDirTree} shows the experiment directory structure.
@@ -246,7 +265,7 @@ we abstract away the different interfaces into a new unified one.
 This makes it possible to move functions from one provider to another, 
 assuming no platform specific APIs have been used within the function (which we thus avoid). 
 Some platform-specific behavior also has to be mocked for compatibility, 
-e.g.\@ GCP uses a different JSON body parsing as AWS.
+e.g.\@ GCP uses a different JSON body parsing as AWS.\@
 
 Our RPC handler accepts a JSON body from the HTTP request and returns a JSON object. 
 This convention makes it possible to implement straight forward (natural looking) JavaScript functions. 
@@ -259,7 +278,7 @@ Usage instructions about this handler can be found in \Cref{ssub:rpcHandler}.
 \begin{center}
   \includegraphics[width=\linewidth,keepaspectratio]{./deployment-tool.png}
 \end{center}
-\caption{Automatic Function Deployment}
+\caption{Automatic Function Deployment}%
 \label{fig:functionDeployment}
 \end{figure}
 
@@ -277,7 +296,7 @@ All of the functions to URL mapping are created from the \texttt{experiment.json
 The resulting \texttt{mapping.js} will be used to call the peer functions by its name so that developers
 do not need to know about the actual URLs and can work with canonical names of the functions.
 
-\subsection{Libraries & Dependencies}%
+\subsection{Libraries \& Dependencies}%
 \label{sub:designLibsDeps}
 
 With each FaaS platform comes a new way of defining dependencies such as external Node.js 
@@ -286,6 +305,132 @@ For instance, our own router library for platform-independent function definitio
 We include all JS code into one file and inject it into the actual function file. 
 This way all of our dependencies and business logic are bundled into a single deployable file. 
 We use the ncc\footnote{\url{https://github.com/zeit/ncc}} project to achieve this.
+
+\section{Instrumentation of Functions}%
+\label{sec:functionInstrumentation}
+
+The variety of FaaS platforms poses a challenge as there is no general interface and standardization to the deployed functions. 
+The only standard interface exposed by every FaaS implementation is the HTTP serial interface. 
+It would be beneficial to send the experiment measurements over this interface. 
+However, we decided to not modify the request as this will modify the experiment as the transmission load/time 
+would be changed due to the amount of information gathered in an experiment.
+
+\subsection{FaaS Logging Assumptions}%
+\label{sub:designLoggingAssumptions}
+
+We have to send experiment measurements from the remote FaaS functions to the local experiment conductor. 
+For this, we assume that every function has stdout logging as another interface exposed. 
+Specifically we assume that after the experiment was conducted retrieval of logs from all platforms is possible. 
+However, this makes it impossible to receive live experiment measurement data.
+
+\subsection{FaaS Logging Overhead}%
+\label{sub:designLoggingOverhead}
+
+To estimated the impact and overhead of logging, we benchmarked AWS, Azure and GCP printing performance. 
+For each test we took 20 samples to avoid fluctuations.
+
+TODO really necessary?
+
+\section{Instrumentation Capabilities}%
+\label{sec:instrumentationCapabilities}
+
+We define a single measurement as an event, these events will be dispatched to the log stream and later get aggregated. 
+Each request in a program generates a set of measurable events from probes.
+
+\subsection{Call tracing probes}%
+\label{sub:callTracingProbes}
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=\linewidth,keepaspectratio]{./multiple-functions-one-context.png}
+\end{center}
+\caption{Multiple Function Calls Under Same Context}%
+\label{fig:contextID}
+\end{figure}
+
+We want to be able to analyze the temporal causality of a request in the program. 
+To distinguish a request context, we introduce an $ O(1) $ sized request context token as shown in \Cref{fig:contextID}. 
+This request token is unique and can later be used to group events together. 
+As the token has constant size, we can include it in all network calls. 
+Therefore, the (fairly low) overhead between different experiments will be the same, independent of the structure of the program.
+
+When a function is called multiple times in a context, 
+we need to be able to distinguish its calls in the temporal order. 
+We assume that the system clocks are monotonic during the experiment interval, 
+thus using the system time for each function to order the executions should be sufficient under a given context.
+
+\subsubsection{Parallelism}%
+\label{ssub:designFunctionParallelism}
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=\linewidth,keepaspectratio]{./multiple-functions-context-and-call-id.png}
+\end{center}
+\caption[Multiple Function Calls With Context and Pair IDs]{Same setup as \Cref{fig:contextID}, but also containing function pair IDs.}%
+\label{fig:contextAndPairIDs}
+\end{figure}
+
+We cannot distinguish direct call connections on the same call invocation path under the same global context. 
+As the call times are not serialized, we always add a direct call context which only lives from caller to callee and does not get propagated. 
+Theoretically, we could constructs the global context from all call pairs. 
+However for simplicity, we decided to include both IDs such that searching for a global context in pre-processing is much simpler.
+An illustration is shown in \Cref{fig:contextAndPairIDs}.
+
+TODO temporal shift
+%\subsubsection{Function Temporal Shift}%
+%\label{ssub:functionTemporalShift}
+%
+%When a function under a context gets called multiple times, 
+%the execution can happen on multiple executors with different system clocks, making the temporal order impossible to detect.
+%Thus adding an executor context to an event will help to distinguish the temporal order on a single executor but not in the global context. 
+%A vector clock can help to make each execution thread distinguishable and temporally orderable. 
+%Implementing a vector clock is not trivial and depends on the program size, thus not constant in size. 
+%Adding a variable size header to each request would modify the experiment results depending on the program. 
+%Thus we have decided not to implement a vector clock and evaluate the design decision after the first experiments.
+
+\subsubsection{Runtime probes}%
+\label{ssub:runtimeProbes}
+
+\begin{figure}
+  \begin{tcolorbox}
+    \begin{minted}[autogobble]{js}
+    exports.handler = async function(event, context) {
+      measureFunctionTime("func:A", event, context, (e, c) -> {
+        // real function code
+      })
+    }
+    \end{minted}
+  \end{tcolorbox}
+\caption{Inserting Time Measurement to a Node.js Function}
+\label{fig:timeMeasurementCode}
+\end{figure}
+
+To measure the actual runtime of a function we set time probes at the beginning and at the end of a function which will generate an event. 
+This probe has to be present in every function, so we insert our measurement into functions as shown
+in \Cref{fig:timeMeasurementCode}. TODO
+
+\subsubsection{Calling Time Probes}%
+\label{ssub:callingTimeProbes}
+
+TODO
+
+\section{Log Aggregation}%
+\label{sec:designLogAggregation}
+
+Alltogether, each experiment will only generate two main outputs: 
+A file containing the load generator logs and another file containing merged logs from all experiment platforms.
+Log retrieval and aggregation will be triggered after all other operations for a single experiment have been completed. 
+All major FaaS platforms (AWS Lambda, GCP, Azure Functions), as well as other FaaS platforms, provide their own logging-CLI tools,
+which can be used for simple querying and filtering operations. 
+
+TODO: ``?''
+In the global configuration, a logging command is specified, which will output all logs for the given experiment. 
+This ia implemented by specifying identifier tags/prefixes for logging, which are part of the platform-specific configuration.
+
+Our log aggregation is then handled in a simple shell-script, which only needs to execute the logging command specified 
+for each platform and merge all logging outputs into a single file. 
+Only the JSON-formatted logging part of each line will be saved in the combined file, platform-specific log-line content can be discarded. 
+No additional information will be added to each log-line in merging, as all relevant information should be provided in the JSON logging data.
 
 
 \end{document}

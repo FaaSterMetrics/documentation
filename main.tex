@@ -44,6 +44,13 @@
 }
 \usepackage{csquotes}
 
+% bib stuff
+\usepackage[
+    citestyle=numeric-comp,
+    backend=biber,
+    bibencoding=inputenc
+    ]{biblatex}
+\addbibresource{refs.bib}
 
 %%% Appendix formatting
 % Taken from https://tex.stackexchange.com/questions/202928/remove-last-dot-in-title-numbering
@@ -149,4 +156,9 @@
 
 \appendix
 \subfile{appendix/acronyms.tex}
+
+%TODO check refs...
+\addcontentsline{toc}{chapter}{Bibliography}
+\defbibheading{notonline}{\chapter*{Bibliography}}
+\printbibliography[heading=notonline, nottype=online]
 \end{document}
