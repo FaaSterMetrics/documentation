@@ -1,7 +1,8 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-\section{Build, Deploy and Destroy}\label{sec:builddeployanddestroy}
+% TODO: This is getting too long
+\section{Build, Deploy, Fetch logs and Destroy}\label{sec:builddeployanddestroy}
 In this section, the build and deployment and finally destruction process of an experiment is explained. Please ensure that your `experiment.json` file is configured correctly (TODO: cref). All required providers need to be set up correctly (\Cref{sec:providersetup}).
 
 \subsection{Build}\label{sec:build}
@@ -14,16 +15,19 @@ To interact with the different cloud providers, we use `terraform`\footnote{http
 The developed deployment script detects the cloud providers that need to be provisioned by `terraform` and executes the matching `terraform` configuration files.\\
 To deploy your experiment run \texttt{npm run deploy <experiment name>}.\\
 
-% missing: destroy, (logs, analysis) (probably in analysis description?)
+\subsection{Logs}\label{sec:logs}
+After you've conducted an experiment you might want to fetch the logs from all the providers you've deployed resources to. This tasks iterates through all the providers you've deployed resources on and fetches their raw, unprocessed logs to \texttt{logs/<experiment name>/<current date>/<provider>.log}\\
+To fetch the logs from your experiment run \texttt{npm run logs <experiment name>}.\\
+\textit{Note:} When fetching logs be sure to do so \textit{before} destroying the experiment.\\
+
+
 \subsection{Destroy}\label{sec:destroy}
 After you're done experimenting or want a clean state, it is time to release all the allocated resources from the cloud providers.
 This task will completely remove all resources allocated by the \texttt{deploy} command. 
 
 This command should be used after being done experimenting to avoid unnecessary costs and clutter on the cloud providers.
 It should also be used in between experiment runs to ensure a clean state.
-However, running \texttt{deploy} again while the experiment is already deployed will automatically free any unused/outdated resources so during development destroying the experiment often isn't necessary.
-
-\textit{Note:} If fetching logs be sure to do so \textit{before} destroying the experiment. TODO: Reference log fetching\\
+However, running \texttt{deploy} again while the experiment is already deployed will automatically free any unused/outdated resources so during development destroying the experiment often isn't necessary before deploying again.\\
 To destroy your experiment run \texttt{npm run destroy}.\\
 
 
