@@ -2,8 +2,8 @@
 \begin{document}
 
 % TODO: This is getting too long
-\section{Build, Deploy, Fetch logs and Destroy}\label{sec:builddeployanddestroy}
-In this section, the build and deployment and finally destruction process of an experiment is explained. Please ensure that your `experiment.json` file is configured correctly (TODO: cref). All required providers need to be set up correctly (\Cref{sec:providersetup}).
+\section{Build, Deploy, Logs and Destroy}\label{sec:builddeploylogsanddestroy}
+In this section, the build, deployment, log fetching and finally destruction process of an experiment is explained. Please ensure that your `experiment.json` file is configured correctly (TODO: cref). All required providers need to be set up correctly (\Cref{sec:providersetup}).
 
 \subsection{Build}\label{sec:build}
 Before deploying the experiment to the different cloud providers, it is essential to build the application. This step compiles the JavaScript files and generates the deployment artifacts. These artifacts are zip files containing the compiled code and the assets. They are needed in the following deployment step. For compiling the JavaScript files, ncc\footnote{https://github.com/vercel/ncc} from vercel\footnote{https://vercel.com/} is used and allows us to build a single JavaScript file containing the function code and all npm dependencies.\\
