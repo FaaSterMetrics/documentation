@@ -25,7 +25,6 @@ as well as metrics analyzed, that have still not been sufficiently evaluated.
 While recent works \cites{kuhlenkamp_benchmarking_2020,van_eyk_beyond_2020} have made considerable strides towards these topics, 
 a~framework for both building and evaluating performance in FaaS-platforms has still not yet been established.
 
-% TODO Background
 \section{Function as a Service}\label{sec:FaaS}
 
 We define FaaS platforms as an environment to run a set of programmable and stateless functions,
@@ -244,10 +243,6 @@ leverage terraforms capabilities when interacting with cloud providers and FaaS 
 We also succesfully extended terraform to support novel platforms, e.g.\@ MCC's tinyFaaS platform.
 
 TODO deploy, destroy?
-TODO parameterization?
-%\subsection{Terraform parameterization}%
-%\label{sub:terraformParameterization}
-%
 
 \section{Function wrapper}%
 \label{sec:designFunctionWrapper}
@@ -329,7 +324,7 @@ However, this makes it impossible to receive live experiment measurement data.
 To estimated the impact and overhead of logging, we benchmarked AWS, Azure and GCP printing performance. 
 For each test we took 20 samples to avoid fluctuations.
 
-TODO really necessary?
+TODO figures insert
 
 \section{Instrumentation Capabilities}%
 \label{sec:instrumentationCapabilities}
@@ -376,19 +371,7 @@ Theoretically, we could constructs the global context from all call pairs.
 However for simplicity, we decided to include both IDs such that searching for a global context in pre-processing is much simpler.
 An illustration is shown in \Cref{fig:contextAndPairIDs}.
 
-TODO temporal shift
-%\subsubsection{Function Temporal Shift}%
-%\label{ssub:functionTemporalShift}
-%
-%When a function under a context gets called multiple times, 
-%the execution can happen on multiple executors with different system clocks, making the temporal order impossible to detect.
-%Thus adding an executor context to an event will help to distinguish the temporal order on a single executor but not in the global context. 
-%A vector clock can help to make each execution thread distinguishable and temporally orderable. 
-%Implementing a vector clock is not trivial and depends on the program size, thus not constant in size. 
-%Adding a variable size header to each request would modify the experiment results depending on the program. 
-%Thus we have decided not to implement a vector clock and evaluate the design decision after the first experiments.
-
-\subsubsection{Runtime probes}%
+\subsubsection{Runtime Probes}%
 \label{ssub:runtimeProbes}
 
 \begin{figure}
@@ -407,7 +390,7 @@ TODO temporal shift
 
 To measure the actual runtime of a function we set time probes at the beginning and at the end of a function which will generate an event. 
 This probe has to be present in every function, so we insert our measurement into functions as shown
-in \Cref{fig:timeMeasurementCode}. TODO
+in \Cref{fig:timeMeasurementCode}. 
 
 \subsubsection{Calling Time Probes}%
 \label{ssub:callingTimeProbes}
