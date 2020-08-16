@@ -84,8 +84,9 @@ There, each function has its I/O behaviour (including individual examples) docum
 
 In comparison to the webshop application, the IoT traffic light calculator combines data from multiple input sources
 which are heterogeneous both in their structural and their frequency behaviour. 
+In order to do so, the application heavily relies on the external database.
 
-Those inputs vary from continuous image and sensor streams to signals by incoming vehicles. 
+Those inputs also vary from continuous image and sensor streams to signals by incoming vehicles. 
 Additionally, the introduced operations require combination of multiple data sources, 
 as well as passing information to multiple subsequent operations, 
 leading to a branched pipeline structure (\Cref{fig:iotArchitectureDiagram}). %TODO formulation?
@@ -104,6 +105,56 @@ AWS IoT Greengrass (\url{https://aws.amazon.com/iot/solutions/iot-edge})
 }
 
 \subsection{Specific Workloads}\label{ssec:iotSpecificWorkloads}
+
+To complete the experiment, we also pre-defined some workload profiles which were automatized with \texttt{artillery}
+(see \Cref{sec:sec:WorkloadsStructure}).
+Naturally, each of those profiles leads to an individual experiment.
+Thus, you should use the application's workload profile that reflects the situation you want to analyse the closest,
+or develop your own one if required.
+That said, the first described workload profile suits an average webshop scenario best and is therefore generally recommended.
+
+\subsubsection{``Shibuya Crossing''}%
+\label{ssub:iotShibuya}
+
+This workload profile aims to simulate a modern city crossing with a large amount of actors,
+hence the name `Shibuya Crossing'.
+The most important part, however, is reflected in its temporal features:
+The workload features a high amount of normal traffic for 5 minutes,
+then being suddenly interrupted by a single emergency.
+Of course, following the declared goal of this application, this one emergency still has to change the traffic lights immediately.
+Thus, we test if the deployed application can still react properly fast, 
+if it has been stressed for a longer time period beforehand (most notably including its database).
+
+The profile can be found in the repository's iot directory as 
+\begin{tcolorbox}
+\quad\texttt{workload-single-incident.yml}
+\end{tcolorbox}
+
+\subsubsection{``Breaking Dawn''}%
+\label{ssub:iotDawn}
+
+This workload profile basically features pure database and function pipeline testing, there are no triggered emergencies.
+The general load increases gradually, thus representing regular city traffic in the morning.
+Testing also lasts for five minutes by default.
+
+The profile can be found in the repository's iot directory as 
+\begin{tcolorbox}
+\quad\texttt{workload-increasing-no-incidents.yml}
+\end{tcolorbox}
+
+\subsubsection{``Pampa-Ampel''}%
+\label{ssub:iotPampaAmpel}
+
+This workload profile contains a relatively low load, but regularly calls all functions the application has to offer,
+for a total of 30 minutes.
+Emergencies are triggered every 2 minutes and last 5 seconds each, 
+thus periodically interrupting the usual light switching process.
+
+The profile's name, ``Pampa-Ampel'' is German and jokingly references to the boredom of life in the countryside.
+The profile can be found in the repository's iot directory as 
+\begin{tcolorbox}
+\quad\texttt{workload-low-load-regular-incidents.yml}
+\end{tcolorbox}
 
 
 \end{document}
