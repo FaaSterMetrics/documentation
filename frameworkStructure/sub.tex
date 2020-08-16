@@ -1,11 +1,291 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-\section{Framework Structure}\label{sec:FrameworkStructure}
-In \Cref{sec:Intro} on \cpageref{sec:Intro} we already talked about everything.
+In this chapter, we will describe the project's design principles,
+including its architectural foundation.
 
-\subsection{Components}
-Just read \Cref{sec:FrameworkStructure} about the framework and shut up!
+% TODO Background
+\section{Function as a Service}\label{sec:FaaS}
+
+We define FaaS platforms as an environment to run a set of programmable and stateless functions,
+which are reachable from inside or the outside through invocation. 
+The main difference to ordinary PaaS platforms is abstraction from a server centered model: 
+A developer can develop and deploy a function without needing to know about a server, hence the common name serverless. 
+An invocation can happen through so-called triggers which can be defined on events 
+such as an incoming HTTP request or an event from another program such as creating a file in an S3 bucket. 
+The common entry point and interface to every function deployed to such a FaaS platform is the HTTP protocol 
+over which parameters and their responses are serialized. 
+We call a set of related FaaS functions a program. A simple such program setup is illustrated in \Cref{fig:frameworkSimpleProgramSetup}
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=\linewidth,keepaspectratio]{./3-functions.png}
+\end{center}
+\caption[Simple FaaS Program Setup]{A simple FaaS program setup consisting of three functions which are deployed on two platforms (AWS and Openwhisk). 
+They generally communicate via the internet (HTPP).}%
+\label{fig:frameworkSimpleProgramSetup}
+\end{figure}
+
+\subsection{FaaS Function Language}%
+\label{sub:FaaSLanguage}
+
+When FaaS was first introduced into the public by AWS in 2014, Node.js (JavaScript) was the only supported target%
+\footnote{\url{https://docs.aws.amazon.com/lambda/latest/dg/lambda-releases.html}}. 
+Later more cloud platforms and frameworks also adopted the FaaS principle, 
+where a majority have also started with Node.js as their first target language. 
+At the time of this writing more languages than Node.js were introduced such as Python or Golang. 
+Nevertheless, Node.js has been the established language ever since the first AWS lambda release.
+
+Thus, the majority of FaaS platforms support Node.js as only or first target. 
+We intend to target this language in our further design and benchmarking library 
+in order to be language compatible with the majority of FaaS platforms.
+
+\subsection{FaaS Call Graph}%
+\label{sub:FaaSCallGraph}
+
+Each program can be represented as a directed graph, 
+with each node serving a function instance and each vertex a call to a function (\Cref{fig:frameworkSimpleProgramCallGraph}). 
+It is possible to have a reflexive or cyclic graph in case of recursion. 
+Each deployed function usually has only one endpoint, 
+meaning that we do not route into multiple HTTP subpaths within a function.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=\linewidth,keepaspectratio]{./simple-call-graph.png}
+\end{center}
+\caption[A FaaS Program's Call Graph ]{A simple FaaS program, together with its call graph.}%
+\label{fig:frameworkSimpleProgramCallGraph}
+\end{figure}
+
+\section{Framework}\label{sec:Framework}
+
+With this work we introduce a comprehensive framework for running experiments 
+to generate tests and benchmark data of complex FaaS programs that are hosted and communicate between different providers. 
+
+We further want to make extension to novel providers by other researchers as convenient as possible. 
+Thus we are trying to keep the required amount of needed interfaces to providers small 
+such that it is possible to evaluate early-stage prototypes with our framework. 
+As we cannot expect all platforms to provide measurement capabilities, 
+we change the deployed program with our framework to compile measurement capabilities into the deployed code 
+such that the program is measuring itself. 
+This approach is called instrumentation and is further discussed in Section (TODO).
+
+Additionally, we have extended the framework to make the setup and deployment of a program on multiple platforms automated. 
+This automatic setup is also responsible for compiling a program and configuring our instrumentation-library, 
+which offers a high-level interface to researchers for measuring their deployed program. 
+Finally it automates the deployment of these programs and the benchmarking and extracting of data 
+to offer a one-stop shop comprehensive solution for multi-platform benchmarking.
+
+\subsection{Framework Components}%
+\label{sub:frameworkComponents}
+
+The framework is split into three subprojects, maintained as git repositories under the FaaSterMetrics name%
+\footnote{\url{https://github.com/FaaSterMetrics}}. 
+We have an overarching ``experiments'' repository which serves as the main entry point to the project.
+The ``lib'' repository contains our platform-agnostic instrumentation-library
+and ``analysis'' is responsible for analyzing raw generated data from the program to extract meaningful data for further processing.  
+This document is found in the ``documentation'' repository.
+
+\section{Experiment Procedure}%
+\label{sec:experimentProcedure}
+
+In this section, we discuss workflow and procedures that happen while running our framework in an experiment. 
+The expectation we have from an experiment is to generate data that will be used to evaluate a platform. 
+When the program or other factors of the experiment are changed, the experiment will be re-run.
+
+We found that requirements that are needed for running a program in production and 
+for analyzing a program for scientific purposes often differ. 
+A program in production usually needs uptime and reliability as well as security. 
+However, these aspects are mostly not relevant for experimentally benchmarking a platform and for generating scientific measurement data. 
+We have decided to engineer and dedicate our framework to be used primarily for scientific purposes
+and thus mostly disregard the production-specific requirements listed above.
+
+The framework's design allows a pre-defined high-level workflow (\Cref{fig:experimentWorkflowDiagram}),
+which we have found to be used throughout many different scientific environments 
+and which is directed towards allowing simple experiment reproducibility.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=\linewidth,keepaspectratio]{./workflow-diagram.png}
+\end{center}
+\caption{General Experiment Workflow Diagram}%
+\label{fig:experimentWorkflowDiagram}
+\end{figure}
+
+The goal of each experiment is to generate data describing the program and the used platforms 
+so that meaningful results can be extracted from the generated data. 
+Also, all experiments and variables that result in produced data shall be easily controllable 
+such that a reviewer can reproduce and verify data and results.
+Specifically, an experiment consists of a program and the workload executed against this program. 
+Thus the program as well as the workload need to be described such that resulting data can be reproduced.
+
+As shown in \Cref{fig:experimentWorkflowDiagram}, our experiments follow certain workflow steps: 
+\begin{enumerate}
+  \item The program is generated and deployed from a local file representation.
+  \item The experiment workload generator is deployed and executed.
+  \item All logs are collected and locally aggregated.
+  \item Finally, the deployed experiment gets destroyed and the downloaded logs can be analyzed.
+\end{enumerate}
+In \Cref{chap:analysis} we introduce our analysis tools, which are responsible for 
+extracting data from the logs and further to produce measurement results from the extracted data.
+The workload generation and its parameters are discussed in TODO.
+
+\section{Experiment Configuration}{sec:experimentConfig}
+
+An experiment is defined by a program and its workload. 
+In this section, we discuss how to make an experiment reproducible. 
+
+To limit changes between experiments, the program shall be deployed in the same way on the same platforms 
+and the workload executed onto the program shall be the same. 
+Thus, the kind of workload and all information about which deployment configuration 
+to use per function in a program within an experiment is declared in an experiment.json config file.
+
+\begin{figure}
+\begin{center}
+  \begin{tcolorbox}
+    \begin{minted}[autogobble]{json}
+    {
+      "workload": {
+        "gcp": {
+          "artillery" : {...}
+        }
+      },
+      "program": {
+        "frontend": {
+          "provider": "aws",
+          "calls": ["currency"]
+        },
+        "currency": {
+          "provider": "google"
+        }
+      }
+    }
+    \end{minted}
+  \end{tcolorbox}
+\end{center}
+\caption[experiment.json Config Example]{An example \texttt{experiment.json} file. 
+Therein, we have two functions: \texttt{frontend} and \texttt{currency}. The former calls the latter.}%
+\label{fig:exampleExperimentConfig}
+\end{figure}
+
+An example of an \texttt{experiment.json} is shown in \Cref{fig:exampleExperimentConfig}.
+The .json as file extension already indicates a JSON structured text file which follows a specific scheme. 
+The general hierarchy is split between workload and program definition.
+
+The program is  composed of the set of functions with the name as their key in the first level, 
+this ensures the uniqueness of the function names. 
+Each function carries a provider and potentially configuration overwrites so that the deployment provider can decide 
+on which platform to put a function. 
+Each function also states their callee functions they intend to invoke during execution in the \mintinline{json}{"calls"} field. 
+In case of recursion the function shall list itself. 
+
+\section{<{1:Experiment Directory Structure}%
+\label{sec:experimentDirectoryStructure}
+
+\Cref{fig:experimentDirTree} shows the experiment directory structure.
+In the experiment's main directory, one can see the functions folder which defines the different function names and their target JS files. 
+The benchmarking framework is opinionated in the sense that a specific folder structure is expected. 
+In the root the \texttt{experiment.json} file is mapping provider configurations to each function. 
+The functions each lie in separate directories, each in their respective \texttt{/functions/<common-function-name>} directory.
+
+\begin{figure}
+\begin{tcolorbox}
+\dirtree{%
+.1 experiments.
+.2 <experiment\_name>.
+.3 experiment.json <- describes program and workload.
+.3 functions.
+.4 <function\_1>.
+.5 index.js.
+.4 <function\_2>.
+.5 index.js.
+.5 <optional\_auxiliary\_file>.
+}
+\end{tcolorbox}
+\caption[Typical Experiment Directory Structure.]{%
+  A typical experiment directory structure. The \texttt{experiment.json} config file lies in the particular experiment's main directory.
+  Within the \texttt{functions} subdirectory all functions have their own folders. 
+  Each of them must contain an \texttt{index.js} file (with Node.js module semantics, see \Cref{sub:functionNaming} for usage),
+  but they may of course use more files.
+}%
+\label{fig:experimentDirTree}
+\end{figure}
+
+\section{Terraform as FaaS \& Cloud Provider Abstraction}%
+\label{sec:terraform}
+
+When running an experiment, we need to be able to deploy the functions, aggregate generated logs, and tear everything down. 
+Anything which can fulfill these requirements could be used to run an experiment.
+
+For our chosen FaaS providers, the deployment and configuration of the platforms are managed with the Infrastructure as Code tool terraform%
+\footnote{\url{https://www.terraform.io}}. 
+It enables us to create reproducible test setups for all major cloud platform providers and to extend it to novel providers. 
+Since terraform allows abstraction and paraterization we try to not interfere with the intended use case and 
+leverage terraforms capabilities when interacting with cloud providers and FaaS platforms as.
+We also succesfully extended terraform to support novel platforms, e.g.\@ MCC's tinyFaaS platform.
+
+TODO deploy, destroy?
+TODO parameterization?
+%\subsection{Terraform parameterization}%
+%\label{sub:terraformParameterization}
+%
+
+\section{Function wrapper}%
+\label{sec:designFunctionWrapper}
+
+True to the standard FaaS paradigm, we intend to have single call functions only. 
+This way, we can define a single endpoint for each deployed function and use its unique function name globally 
+(even across different platforms), also see Section ``Definition of Experiments''. 
+This enables us to easily define our own small RPC framework, as shown below.
+
+\subsection{Function Handler}%
+\label{sub:designFunctionHandler}
+
+Since each platform comes with its own function implementation and way to define function prototypes, 
+we abstract away the different interfaces into a new unified one. 
+This makes it possible to move functions from one provider to another, 
+assuming no platform specific APIs have been used within the function (which we thus avoid). 
+Some platform-specific behavior also has to be mocked for compatibility, 
+e.g.\@ GCP uses a different JSON body parsing as AWS.
+
+Our RPC handler accepts a JSON body from the HTTP request and returns a JSON object. 
+This convention makes it possible to implement straight forward (natural looking) JavaScript functions. 
+Usage instructions about this handler can be found in \Cref{ssub:rpcHandler}.
+
+\subsection{Function Call (Stub)}%
+\label{sub:designFunctionCalls}
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=\linewidth,keepaspectratio]{./deployment-tool.png}
+\end{center}
+\caption{Automatic Function Deployment}
+\label{fig:functionDeployment}
+\end{figure}
+
+Functions in our program need to be able to call each other, independent of where the functions are deployed. 
+We have defined our function interface to be wrapped by an RPC framework, 
+so we can utilize this further to abstract real function URLs to the canonical name of the function. 
+
+The framework has to be able to map the canonical name to the real function URL, 
+as we want to abstract the peer URL so that the caller code is agnostic to where the callee is deployed. 
+As the URL of a function is deployment specific and only known by the deployment tool, 
+it is thus possible to compile all endpoint mappings into the source code. 
+When using the RPC stub, we map the function name against the created route of the RPC receiver. 
+All of the functions to URL mapping are created from the \texttt{experiment.json} in combination with the deployment tool%
+\Cref{fig:functionDeployment}. 
+The resulting \texttt{mapping.js} will be used to call the peer functions by its name so that developers
+do not need to know about the actual URLs and can work with canonical names of the functions.
+
+\subsection{Libraries & Dependencies}%
+\label{sub:designLibsDeps}
+
+With each FaaS platform comes a new way of defining dependencies such as external Node.js 
+package manager dependencies or our own libraries for metrics and convenience.
+For instance, our own router library for platform-independent function definitions is needed.
+We include all JS code into one file and inject it into the actual function file. 
+This way all of our dependencies and business logic are bundled into a single deployable file. 
+We use the ncc\footnote{\url{https://github.com/zeit/ncc}} project to achieve this.
 
 
 \end{document}
