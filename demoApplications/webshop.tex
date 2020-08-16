@@ -138,7 +138,7 @@ Also, the functionality depends on a single database, representing real-world st
 
 \subsection{Specific Workloads}\label{ssec:webshopSpecificWorkloads}
 
-To complete the experiment, we also developed five workload profiles which were automatized with \texttt{artillery}
+To complete the experiment, we also pre-defined some workload profiles which were automatized with \texttt{artillery}
 (see \Cref{sec:sec:WorkloadsStructure}).
 Obviously, each of those profiles leads to an individual experiment.
 Thus, you should use the application's workload profile that reflects the situation you want to analyse the closest,
@@ -148,6 +148,71 @@ That said, the first described workload profile suits an average webshop scenari
 \subsubsection{Average High Webshop Traffic}%
 \label{ssub:webshopProfileHighTraffic}
 
-TODO
+This workload profile aims to simulate normal high traffic situations.
+Many customers visit the webshop, but not everyone actually buys products.
+This means that there are rather shallow and rather deep (nested) function calls in a fairly equal manner.
+As such, the load on the frontend and e.g.\@ the ad service (which are always used) is in total much heavier than e.g.\@ 
+on the checkout service.
 
+In terms of resources, this workload is more CPU heavy than reliant on external I/O (database),
+since many customers just browse and do not place many products into their cart (which uses the database).
+It also features a gradual load increase, meaning that while functions do perform cold-start at the beginning,
+those will not all happen similarly in a large quantity, since some functions will only be called later.
+
+The profile can be found in the repository's webservice directory as 
+\begin{tcolorbox}
+\quad\texttt{workload-constant-high-load-uniform.yml}
+\end{tcolorbox}
+
+\subsubsection{Black Friday Advertisement}%
+\label{ssub:webshopProfileBlackFridayAds}
+
+There is a sudden new Black Friday promotion where some famous product can be bought at half price.
+Links to the shop are shared all over social media and consequently there is a very sudden burst towards high traffic
+within a short time period.
+
+This profile also features many deep (nested) function calls, since the customers are all buying that one product.
+Thus, in not only stress-tests elasticity capacities (triggering many cold-starts in a short time),
+it also relies on the external shopping cart database rather heavily, because each customer triggers multiple database calls.
+
+The profile can be found in the repository's webservice directory as 
+\begin{tcolorbox}
+\quad\texttt{workload-cold-to-spike.yml}
+\end{tcolorbox}
+
+\subsubsection{Black Friday Afternoon}%
+\label{ssub:webshopProfileBlackFridayDaytime}
+
+This workload profile is more directed at simulating an average Black Friday afternoon situation:
+Very many people visit the shop, but most of them only enjoy window-shopping. 
+They basically visit the shop only to compare its special offers to those of other webshops
+and then just go for the other shop or none at all.
+
+Thus, this profile is rather similar to the first (\Cref{ssub:webshopProfileHighTraffic}),
+but the ratio of deep to shallow calls is much more favored towards the former.
+This means, that nearly all load lies on the frontend and the functions it directly calls.
+Functions like checkout, payment or even the external database are hardly used at all.
+
+The profile can be found in the repository's webservice directory as 
+\begin{tcolorbox}
+\quad\texttt{workload-constant-high-load-shallow.yml}
+\end{tcolorbox}
+
+\subsubsection{Regular Morning Increase}%
+\label{ssub:webshopProfileRegularMorning}
+
+This workload profile tries to represent a regular weekday morning: 
+The later it gets, the more people wake up and each one of them realizes they needed to buy exactly one product.
+Thus, they go exactly for this one product only and then leave for work.
+
+This profile is most interesting if one wants to test all functions and the database in a rather similar number.
+Since each customer buys exactly one product (deep function calls, triggering whole checkout process),
+all functions are used. 
+Obviously, the frontend still carries a (constant times) higher load than the other functions, 
+since it has to process and forward each user request.
+
+The profile can be found in the repository's webservice directory as 
+\begin{tcolorbox}
+\quad\texttt{workload-phases-all-buy.yml}
+\end{tcolorbox}
 \end{document}
