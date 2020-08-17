@@ -17,31 +17,56 @@
   Application-Driven Benchmarking
   }&
   \makecell[{{p{10cm}}}]{%
-    One main motivation for this project is the current lack of real application-driven
+    One main motivation for this project is that all current FaaS benchmarks we know of
+    are microbenchmark-focused and do not completely represent the setting of real-world applications.
   }\\
   \midrule[0.02em]
   \makecell[{{p{4cm}}}]{%
   Support for Cross-Provider Setups
   }&
   \makecell[{{p{10cm}}}]{%
+    When building complex real-world applications, it may be useful or needed to split
+    functionality across multiple FaaS platforms.
+    Additionally, our framework should also be able to evaluate those platforms themselves in terms of performance,
+    given a specific scenario.
   }\\
   \midrule[0.02em]
   \makecell[{{p{4cm}}}]{%
   Easy Adaptibility to New Providers
   }&
   \makecell[{{p{10cm}}}]{%
+    It should be possible to extend the framework, 
+    such that support for novel and even experimental providers can later be added. %TODO achieved by e.g. common experiment process
+    Especially in a fairly young environment such as the FaaS landscape,
+    there may still emerge new platforms which are e.g.\@ specialized in a certain context.
   }\\
   \midrule[0.02em]
   \makecell[{{p{4cm}}}]{%
   External Database Support
   }&
   \makecell[{{p{10cm}}}]{%
+    Since FaaS programming is stateless by its paradigm,
+    interacting with external databases that keep any state is 
+    inevitable in many FaaS applications.
+    This need has to be supported by our framework.
   }\\
   \midrule[0.02em]
   \makecell[{{p{4cm}}}]{%
   Automated Build and Deployment Process %%% Note: Once set up
   }&
   \makecell[{{p{10cm}}}]{%
+    Once set up and configured, no manual intervention should be needed 
+    to get a program and its workload run.
+  }\\
+  \midrule[0.02em]
+  \makecell[{{p{4cm}}}]{%
+  Minimal Experiment Configuration Necessary %%% One File, declarative deployment, simple policy changes
+  }&
+  \makecell[{{p{10cm}}}]{%
+    An experiment should be described with a single configuration file.
+    It should be deployable in a declarative way, such that for a simple policy changes
+    like moving a function from one platform to another one only single configuration edits are necessary
+    while all remaining work is abstracted.
   }\\
   \midrule[0.02em]
   \makecell[{{p{4cm}}}]{%
@@ -70,12 +95,6 @@
   \midrule[0.02em]
   \makecell[{{p{4cm}}}]{%
   Simple Data Visualisation %%% Common interests like function time + call graph, technically optional
-  }&
-  \makecell[{{p{10cm}}}]{%
-  }\\
-  \midrule[0.02em]
-  \makecell[{{p{4cm}}}]{%
-  Minimal Experiment Configuration Necessary %%% One File, declarative deployment, simple policy changes
   }&
   \makecell[{{p{10cm}}}]{%
   }\\
