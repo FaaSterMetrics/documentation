@@ -15,8 +15,8 @@ This step compiles the JavaScript files and generates the deployment artifacts.
 These artifacts are essentially .zip files containing the compiled code and the assets. 
 They are needed in the following deployment step. 
 
-For compiling the JavaScript files, ncc\footnote{https://github.com/vercel/ncc} 
-from vercel\footnote{https://vercel.com} is used.
+For compiling the JavaScript files, ncc\footnote{\url{https://github.com/vercel/ncc}} 
+from vercel\footnote{\url{https://vercel.com}} is used.
 It allows us to build a single JavaScript file containing the function code and all npm dependencies.
 
 To build your experiment run \texttt{npm run build <experiment name>}.
@@ -24,10 +24,10 @@ To build your experiment run \texttt{npm run build <experiment name>}.
 \subsection{Deploy}\label{sec:deploy}
 If the experiment is now successfully built, 
 the next step is to deploy the functions and services to the cloud providers. 
-A service is for example a key-value database like redis\footnote{https://redis.io}. 
+A service is for example a key-value database like redis\footnote{\url{https://redis.io}}. 
 
 To interact with the different cloud providers, we use `terraform'%
-\footnote{https://www.terraform.io/} from HashiCorp\footnote{https://www.hashicorp.com/}. 
+\footnote{\url{https://www.terraform.io/}} from HashiCorp\footnote{\url{https://www.hashicorp.com/}}. 
 Terraform is a cloud infrastructure automation tool that allows us to create, 
 update, or delete cloud resources with declarative configuration files. 
 This functionality is essential in terms of reproducibility and predictability.
@@ -60,7 +60,6 @@ automatically free any unused/outdated resources.
 Thus, during development it is often not necessary to destroy the experiment before deploying again.
 
 To destroy your experiment run \texttt{npm run destroy}.
-
 
 
 \end{document}
