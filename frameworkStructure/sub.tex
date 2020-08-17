@@ -273,8 +273,8 @@ as we want to abstract the peer URL so that the caller code is agnostic to where
 As the URL of a function is deployment specific and only known by the deployment tool, 
 it is thus possible to compile all endpoint mappings into the source code. 
 When using the RPC stub, we map the function name against the created route of the RPC receiver. 
-All of the functions to URL mapping are created from the \texttt{experiment.json} in combination with the deployment tool%
-\Cref{fig:functionDeployment}. 
+All of the function to URL mappings are created from the \texttt{experiment.json} in combination with the deployment tool
+(\Cref{fig:functionDeployment}). 
 The resulting \texttt{mapping.js} will be used to call the peer functions by its name so that developers
 do not need to know about the actual URLs and can work with canonical names of the functions.
 
