@@ -459,7 +459,7 @@ Therefore, we have to distinguish between timing probes to functions or to exter
 \end{center}
 \caption[Function Call Time Measurement]{%
   By applying Cristian's algorithm, we can determine the (averaged) network delay when calling 
-  a FaaS function $P$ from another function $\lambda$.
+  a FaaS function \textbf{P} from another function $\lambda$.
 }
 \label{fig:cristiansTimeMeasurement}
 \end{figure}
@@ -479,7 +479,7 @@ the only assumption is that they run approximately at the same speed in a small 
   \includegraphics[]{./round-trip-time.png}
 \end{center}
 \caption[External Service Time Measurement]{%
-  In contrast to \Cref{fig:cristiansTimeMeasurement}, we can not reason about the runtime of the called service $P$ 
+  In contrast to \Cref{fig:cristiansTimeMeasurement}, we can not reason about the runtime of the called service \textbf{P} 
   from function $\lambda.$ Only the call's round-trip-time is known. 
   This~makes it impossible to isolate the network delay.
 }
@@ -488,6 +488,28 @@ the only assumption is that they run approximately at the same speed in a small 
 
 When measuring the invocation time to other services we can only extract the total round-trip time,
 as we have no information about the actual running time of the program or of the time it takes the network to transmit the message.
+
+\subsection{Coldstarts and Executors}%
+\label{sub:coldStartProbing}
+
+Even though serverless-FaaS platforms usually promise to offer development without caring about underlying hardware and to offer infinite scaling, 
+a majority of them suffers from bottlenecks and performance hits called cold-starts. 
+
+A cold-start occurs if the underlying executor of a function gets started for the first time, 
+i.e.\@ if a function is not active and a new executor has to be allocated for a request. 
+This can also happen if the amount of requests increases and the platform accordingly has to allocate a new executor. 
+Such an executor for JavaScript functions is usually implemented as an instance of Node.js.
+Some platforms provide an option to directly detect if a function has just cold-started, 
+however there is no unified interface for retrieving this information. 
+Which is why we have to use another, universally applicable way to find out whether our functions have cold-started or not.
+
+To this end, we utilize the fact that it is possible to store variables locally on an executor, 
+even though FaaS environments are considered to be stateless: 
+Whenever we initialize an executor, we also attach a new static random lifetime identifier to it. 
+We then add this identifier to each of its logentries, 
+which allows us to identify the instance that we are currently serving a called function with. 
+Further we can utilize this to detect cold starts as the first request which contains a new executor ID 
+has to be served on an cold-started instance.
 
 
 \section{Log Aggregation}%
