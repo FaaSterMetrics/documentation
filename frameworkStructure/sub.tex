@@ -3,28 +3,6 @@
 
 In this chapter, we describe the project's design principles,
 including its architectural foundation.
-%TODO
-In order to do so, we will first give a short overview over current scientific 
-research on FaaS benchmarking and thereby separate our accomplishments.
-
-% TODO not in intro?
-% TODO FaaS APPLICATIONS?
-\section{Background and current Landscape}\label{sec:background}
-
-Serverless cloud computing platforms (FaaS) such as AWS Lambda, Google Cloud Functions or Azure Functions 
-have garnered considerable commercial and scientific interest through the promise of removing deployment concerns from the developer. 
-That~platform-centric approach provides considerable challenges in evaluating performance behavior between different workloads and platforms. 
-Thus far there is no single established approach for designing FaaS application benchmarks or an established set of metrics 
-to evaluate characteristics such as performance or reliability.
-
-Previous contributions have established approaches for analyzing across multiple platforms \cite{malawski_benchmarking_2018}, 
-big-data workloads \cite{kuhlenkamp_evaluation_2019} and system characteristics such as platform elasticity \cite{kuhlenkamp_benchmarking_2020}. 
-While the number of contributions has risen considerably over the last few years, 
-a~review by \textcite{kuhlenkamp_benchmarking_2018} identified a number of challenges both in regards to workload and problem formulation, 
-as well as metrics analyzed, that have still not been sufficiently evaluated.
-
-While recent works \cites{kuhlenkamp_benchmarking_2020,van_eyk_beyond_2020} have made considerable strides towards these topics, 
-a~framework for both building and evaluating performance in FaaS-platforms has still not yet been established.
 
 \section{Function as a Service}\label{sec:FaaS}
 
