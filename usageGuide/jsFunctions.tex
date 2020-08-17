@@ -24,7 +24,7 @@ As can be seen, our FaaSterMetrics library is used universally across the projec
 We~also wrote an asynchronous JavaScript function that returns a JavaScript object with a \mintinline{js}{'Hello World'} string. 
 It takes two arguments and is then passed to a so-called `rpcHandler' which gets exported (\Cref{ssub:rpcHandler}). 
 
-\newpage{}%TODO review
+\newpage{}
 \subsection{Function Naming Convention}\label{sub:functionNaming}
 
 Each FaaS function of an experiment is found in a file named \texttt{index.js} 
@@ -136,8 +136,9 @@ Complete examples of user functions which call other functions are shown in
 \subsection{Database Access}\label{sub:functionDBAccess}
 
 Experiments can use an external redis database.
-The only preliminary step for its usage is having a working AWS provider setup (\Cref{ssub:providersetupaws}),
+As a preliminary step for its usage you need to have a working AWS provider setup (\Cref{ssub:providersetupaws}),
 since our deployment process uses an AWS `EC2' instance for this redis.
+You should also have this redis declared in your \texttt{experiment.json} config file as shown in \Cref{fig:exampleExperimentConfig}.
 
 Afterwards, the database becomes available to a function by passing an option object to the respective function wrapper.
 Assuming that database is called \mintinline{json}{"redis"} within the \texttt{experiment.json} config file,
@@ -160,7 +161,7 @@ Complete examples of user functions that also use a database can be seen in
 
 \subsection{Custom Log Output}\label{sub:functionCustomLogs}
 
-While the FaaSterMetrics library is usually sufficient for all logging purposes (see TODO:\@ ---redacted---),
+While the FaaSterMetrics library is usually sufficient for all logging purposes (see \Cref{sec:instrumentationCapabilities}),
 you may sometimes feel the need to introduce your own log statements and still get the usual timestamps, etc.\@
 for future analysis.
 In these situations, you can just use the \mintinline{js}{ctx.log('string_to_be_logged')} statement,
