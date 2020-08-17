@@ -21,15 +21,14 @@ it is also possible to generate high load used i.e.\@ for the IoT application.
 
 
 If you want to execute a specific workload for an experiment, 
-you have to declare this in the \mintinline{json}{"services"} section of your \texttt{experiment.json}.
-Thereby, the path to \texttt{workload.yml} should be given relative to the \texttt{experiments/<experiment\_name>} path. 
-% TODO: link experiment.json figure
+you have to declare this in the \mintinline{json}{"services"} section of your \texttt{experiment.json} as can be seen in \Cref{fig:exampleExperimentConfig}.
+The path to \texttt{workload.yml} should be given relative to the \texttt{experiments/<experiment\_name>} path. 
 
 \subsection{Defining workloads}
 
 We are using standard artillery workload-definitions, 
 so their \texttt{official documentation}\footnote{\url{https://artillery.io/docs/}} applies. 
-However there are some requirements that need to be fullfilled, 
+However there are some requirements that need to be fulfilled, 
 please see \Cref{fig:exampleWorkloadYML} for an example of a valid FaaSterMetrics \texttt{workload.yml}.
 
 We have made use of their scripting capabilities to inject an unique identifier 
