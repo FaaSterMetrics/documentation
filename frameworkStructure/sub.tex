@@ -128,9 +128,9 @@ As shown in \Cref{fig:experimentWorkflowDiagram}, our experiments follow certain
   \item All logs are collected and locally aggregated.
   \item Finally, the deployed experiment gets destroyed and the downloaded logs can be analyzed.
 \end{enumerate}
+The workload generation and its parameters are discussed in \Cref{sec:WorkloadsStructure}.
 In \Cref{chap:analysis} we introduce our analysis tools, which are responsible for 
 extracting data from the logs and further to produce measurement results from the extracted data.
-The workload generation and its parameters are discussed in TODO oof.
 
 \subsection{Experiment Configuration}\label{sec:experimentConfig}
 
@@ -313,7 +313,7 @@ Before we decided to use logging output as a generalized interface to receive me
 we wanted to determine the resulting overhead.
 To estimate the impact and overhead of logging, we benchmarked AWS, Azure, and GCP printing performance. 
 
-This way, we got an overview of how performance differs depending on the provider -- using the data gathered 
+This way, we got an overview of how performance differs depending on the provider --- using the data gathered 
 in the experiment; we later concluded that standard logging is a~viable option.
 We tested log output of different sizes and different repetitions. 
 For each test, we took 20 samples to avoid fluctuations.
@@ -326,15 +326,15 @@ The code to reproduce the experiments can be found in our GitHub ``test'' reposi
 
 \begin{figure}
 \begin{center}
-  \includegraphics[width=11cm, keepaspectratio]{./AWS-logging.png}\\
-  \includegraphics[width=11cm, keepaspectratio]{./Azure-logging.png}\\
-  \includegraphics[width=11cm, keepaspectratio]{./GCP-logging.png}
+  \includegraphics[width=11cm,keepaspectratio]{./AWS-logging.png}\\
+  \includegraphics[width=11cm,keepaspectratio]{./Azure-logging.png}\\
+  \includegraphics[width=11cm,keepaspectratio]{./GCP-logging.png}
 \end{center}
 \caption[Results of Logging Tests on AWS, GCP and Azure]{%
   We measured the time it took to print lines of 100, 1000, and 10000 characters to the console on three major FaaS providers. 
   The number of lines printed are increased from 10 to 10000 to get accurate results of how well a platform performs 
   under multiple logging statements which can occur during normal execution.
-}
+}%
 \label{fig:providerLoggingTest}
 \end{figure}
 
@@ -412,7 +412,7 @@ An illustration is shown in \Cref{fig:contextAndPairIDs}.
     }
     \end{minted}
   \end{tcolorbox}
-\caption{Inserting Time Measurement to a Node.js Function}
+\caption{Inserting Time Measurement to a Node.js Function}%
 \label{fig:timeMeasurementCode}
 \end{figure}
 
@@ -438,17 +438,17 @@ Therefore, we have to distinguish between timing probes to functions or to exter
 
 \begin{figure}
 \begin{center}
-  \includegraphics[]{./cristian.png}
+  \includegraphics[scale=0.4]{./cristian.png}
 \end{center}
 \caption[Function Call Time Measurement]{%
   By applying Cristian's algorithm, we can determine the (averaged) network delay when calling 
   a FaaS function \textbf{P} from another function $\lambda$.
-}
+}%
 \label{fig:cristiansTimeMeasurement}
 \end{figure}
 
 When invoking another FaaS function we receive information about the actual runtime of the function.
-Thus, we can use Cristian's algorithm \cite{cristian_probabilistic_1989} to calculate the network delay 
+Thus, we can use Cristian's algorithm~\cite{cristian_probabilistic_1989} to calculate the network delay 
 in addition to the runtime of the invoked function itself. 
 This enables us to evaluate those network delays between functions (and usually providers). 
 Also, we do not require both clocks to be synced perfectly, 
@@ -459,13 +459,13 @@ the only assumption is that they run approximately at the same speed in a small 
 
 \begin{figure}
 \begin{center}
-  \includegraphics[]{./round-trip-time.png}
+  \includegraphics[scale=0.4]{./round-trip-time.png}
 \end{center}
 \caption[External Service Time Measurement]{%
   In contrast to \Cref{fig:cristiansTimeMeasurement}, we can not reason about the runtime of the called service \textbf{P} 
   from function $\lambda.$ Only the call's round-trip-time is known. 
   This~makes it impossible to isolate the network delay.
-}
+}%
 \label{fig:externalServiceTimeMeasurement}
 \end{figure}
 

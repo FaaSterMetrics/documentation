@@ -29,7 +29,6 @@ but has of course been fully reimplemented as a FaaS project
 \end{center}
 \caption[Webshop Architecture Diagram]{%
   Webshop architecture diagram as illustrated by Google\protect\footnotemark.
-  %TODO remove external API
   All `services' as well as the frontend are implemented as separate functions within our demo application. 
   They communicate internally with each other via our library's RPC system and are thus automatically measured at runtime.%
 }%
@@ -114,7 +113,6 @@ Finally they can checkout their order, leading to a payment and a shipping proce
   \bottomrule
 \end{longtable}
 
-% TODO Call Spec Appendix?
 Exact Function I/O specification can also be looked up within the source code\footnotemark.
 There, each function has its I/O behaviour (including individual examples) documented.
 \footnotetext{\url{https://github.com/FaaSterMetrics/experiments/tree/master/experiments/webservice/functions}}
