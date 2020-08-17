@@ -1,30 +1,26 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-
-\section{Workloads}\label{sec:WorkloadsStructure}
-
-% Carstens Comment: Why should this have a title anyway?
-%\subsection{General workload architecture} % Todo: meh title
+\subsection{Experiment Workloads}\label{sec:WorkloadsStructure}
 
 The workload is the core of an experiment as it defines how a program is used and tested. 
 Thus, we want to make the generated workload reproducible. 
-Many aspects play into the resulting workload such as the physical position and network connection of the machine the workload is generated on. 
+Many aspects affect the actual resulting workload, 
+such as the physical position and network connection of the machine the workload is generated on. 
 To minimize those aspects we are automatically provisioning an VPS on AWS which will generate the workload.
 
 We define the workload through \texttt{artillery}\footnote{\url{https://artillery.io}} which allows us to 
 execute user-like workloads such as URL path traversal or random path choice on endpoints. 
-We utilize this to emulate heterogeneous user behaviour for i.e.\@ the webshop, 
-it is also possible to generate high load used i.e.\@ for the IoT application.
+We utilize this mainly to emulate heterogeneous user behaviour for the webshop, 
+and to generate high load used for both demo applications.
 
-\subsection{Required configuration}
-
+\subsubsection{Required configuration}
 
 If you want to execute a specific workload for an experiment, 
 you have to declare this in the \mintinline{json}{"services"} section of your \texttt{experiment.json} as can be seen in \Cref{fig:exampleExperimentConfig}.
 The path to \texttt{workload.yml} should be given relative to the \texttt{experiments/<experiment\_name>} path. 
 
-\subsection{Defining workloads}
+\subsubsection{Defining workloads}
 
 We are using standard artillery workload-definitions, 
 so their \texttt{official documentation}\footnote{\url{https://artillery.io/docs/}} applies. 

@@ -56,7 +56,7 @@ meaning that we do not route into multiple HTTP subpaths within a function.
 \label{fig:frameworkSimpleProgramCallGraph}
 \end{figure}
 
-\section{Framework}\label{sec:Framework}
+\section{Benchmarking Framework}\label{sec:Framework}
 
 With this work, we introduce a comprehensive framework for running experiments 
 to generate tests and benchmark data of complex FaaS programs that are hosted on and communicate between different FaaS providers. 
@@ -87,10 +87,11 @@ The ``lib'' repository contains our platform-agnostic instrumentation-library
 and ``analysis'' is responsible for analyzing raw generated data from the program to extract meaningful data for further processing.  
 This document is found in the ``documentation'' repository.
 
-\section{Experiment Procedure}%
-\label{sec:experimentProcedure}
 
-In this section, we discuss workflow and procedures that happen while running our framework in an experiment. 
+\section{Experiments}%
+\label{sec:experiments}
+
+In our context, any experiment consists of a deployed program and a workload running against this program.
 The expectation we have from an experiment is to generate data that will be used to evaluate a platform. 
 When the program or other factors of the experiment are changed, the experiment will be re-run.
 
@@ -131,7 +132,7 @@ In \Cref{chap:analysis} we introduce our analysis tools, which are responsible f
 extracting data from the logs and further to produce measurement results from the extracted data.
 The workload generation and its parameters are discussed in TODO oof.
 
-\section{Experiment Configuration}\label{sec:experimentConfig}
+\subsection{Experiment Configuration}\label{sec:experimentConfig}
 
 An experiment is defined by a program and its services. 
 In this section, we discuss how to make an experiment reproducible. 
@@ -179,7 +180,7 @@ on which platform to put a function.
 Each function also states their callee functions they intend to invoke during execution in the \mintinline{json}{"calls"} field. 
 In case of recursion the function shall list itself. 
 
-\section{Experiment Directory Structure}%
+\subsection{Experiment Directory Structure}%
 \label{sec:experimentDirectoryStructure}
 
 \Cref{fig:experimentDirTree} shows the experiment directory structure.
@@ -211,7 +212,7 @@ The functions each lie in separate directories, each in their respective \texttt
 \label{fig:experimentDirTree}
 \end{figure}
 
-\section{Terraform as FaaS \& Cloud Provider Abstraction}%
+\subsection{Terraform as FaaS \& Cloud Provider Abstraction}%
 \label{sec:terraform}
 
 When running an experiment, we need to be able to deploy the functions, aggregate generated logs, and tear everything down. 
@@ -220,13 +221,15 @@ Anything which can fulfill these requirements could be used to run an experiment
 For our chosen FaaS providers, the deployment and configuration of the platforms are managed with the Infrastructure as Code tool terraform%
 \footnote{\url{https://www.terraform.io}}. 
 It enables us to create reproducible test setups for all major cloud platform providers and to extend it to novel providers. 
-Since terraform allows abstraction and paraterization we try to not interfere with the intended use case and 
-leverage terraforms capabilities when interacting with cloud providers and FaaS platforms as.
-We also succesfully extended terraform to support novel platforms, e.g.\@ MCC's tinyFaaS platform.
+Since terraform allows abstraction and parameterization we 
+leverage terraforms capabilities when interacting with cloud providers and FaaS platforms as much as possible.
+This means that terraform is mainly internally responsible for deploying and destroying our programs.
+We also successfully extended terraform to support novel platforms, e.g.\@ MCC's tinyFaaS platform.
 
-TODO deploy, destroy?
+% Well, this is dirty.
+\subfile{../experimentStructure/workloads.tex}
 
-\section{Function wrapper}%
+\section{Function Wrapper Library}%
 \label{sec:designFunctionWrapper}
 
 True to the standard FaaS paradigm, we intend to have single call functions only. 
@@ -239,10 +242,12 @@ This enables us to easily define our own small RPC framework, as shown below.
 
 Since each platform comes with its own function implementation and way to define function prototypes, 
 we abstract away the different interfaces into a new unified one. 
-This makes it possible to move functions from one provider to another, 
-assuming no platform specific APIs have been used within the function (which we thus avoid). 
+To this end, a library-provided function wrapper, called `RPC handler' is used.
+
+This approach then makes it possible to move functions from one provider to another, 
+assuming no platform specific APIs have been used within the function (which we avoid). 
 Some platform-specific behavior also has to be mocked for compatibility, 
-e.g.\@ GCP uses a different JSON body parsing as AWS.\@
+e.g.\@ that GCP uses a different JSON body parsing as AWS.\@
 
 Our RPC handler accepts a JSON body from the HTTP request and returns a JSON object. 
 This convention makes it possible to implement straight forward (natural looking) JavaScript functions. 
@@ -273,13 +278,13 @@ All of the functions to URL mapping are created from the \texttt{experiment.json
 The resulting \texttt{mapping.js} will be used to call the peer functions by its name so that developers
 do not need to know about the actual URLs and can work with canonical names of the functions.
 
-\subsection{Libraries \& Dependencies}%
+\subsection{Dependency Management}%
 \label{sub:designLibsDeps}
 
-With each FaaS platform comes a new way of defining dependencies such as external Node.js 
-package manager dependencies or our own libraries for metrics and convenience.
-For instance, our own router library for platform-independent function definitions is needed.
-We include all JS code into one file and inject it into the actual function file. 
+Our function wrapping library naturally is a dependency for using the framework.
+Moreover, with each new FaaS platform the number of external Node.js 
+package dependencies increases.
+This is why we include all necessary JS code into one file and inject it into the actual function files. 
 This way all of our dependencies and business logic are bundled into a single deployable file. 
 We use the ncc\footnote{\url{https://github.com/zeit/ncc}} project to achieve this.
 
@@ -308,15 +313,15 @@ Before we decided to use logging output as a generalized interface to receive me
 we wanted to determine the resulting overhead.
 To estimate the impact and overhead of logging, we benchmarked AWS, Azure, and GCP printing performance. 
 
-This way, we got an overview of how performance differs depending on the provider—--using the data gathered 
-in the experiment; we later concluded that standard logging is a viable option.
+This way, we got an overview of how performance differs depending on the provider -- using the data gathered 
+in the experiment; we later concluded that standard logging is a~viable option.
 We tested log output of different sizes and different repetitions. 
 For each test, we took 20 samples to avoid fluctuations.
 We internally measured the runtime and return the time in the function response. 
 The code to reproduce the experiments can be found in our GitHub ``test'' repository%
 \footnote{\url{https://github.com/FaaSterMetrics/tests}, git version revision 01cf44}.
 
-\subsection{FaaS Logging Result}%
+\subsection{FaaS Logging Verdict}%
 \label{sub:designLoggingResult}
 
 \begin{figure}

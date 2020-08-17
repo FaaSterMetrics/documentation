@@ -1,6 +1,6 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
-\section{Intro}\label{sec:Intro}
+\section{Project Motivation}\label{sec:Intro}
 
 Serverless paradigms such as Function-as-a-Service (FaaS) have recently gained considerable interest 
 as they theoretically allow infinite scaling while promising low operational maintenance. 
@@ -287,19 +287,6 @@ can be found in \Cref{tab:requirements} and \Cref{tab:fulfillments}.
   \bottomrule
 \end{longtable}
 
-\subsection{Document Structure}%
-\label{sub:introDocStructure}
-
-%TODO review, add refs
-This document is split into two main parts: 
-It first covers the theoretical aspects and considerations which formed the framework.
-Secondly, there is a practical part that guides through direct setup and use of the project. 
-For people that are only interested in using the framework it is thus sufficient to read TODOo.
-In TODO we describe the structure of the framework and the design principles and assumptions that are used to create our software.
-TODO Shows how to create and run experiments and how to configure different providers such as AWS and tinyFaaS for our framework.
-TODO Shows how to export data to CSV and further gives examples and an introduction to our data analysis framework, 
-which can be used to work with generated data on a high level. 
-
 \subsection{Background and current Landscape}\label{sec:background}
 
 %Serverless cloud computing platforms (FaaS) such as AWS Lambda, Google Cloud Functions or Azure Functions 
@@ -308,16 +295,27 @@ The~FaaS platform-centric approach provides considerable challenges in evaluatin
 Thus far there is no single established approach for designing FaaS application benchmarks or an established set of metrics 
 to evaluate characteristics such as performance or reliability.
 
-Previous contributions have established approaches for analyzing across multiple platforms\cite{malawski_benchmarking_2018}, 
-big-data workloads\cite{kuhlenkamp_evaluation_2019} and system characteristics such as platform elasticity\cite{kuhlenkamp_benchmarking_2020}. 
+Previous contributions have established approaches for analyzing across multiple platforms~\cite{malawski_benchmarking_2018}, 
+big-data workloads~\cite{kuhlenkamp_evaluation_2019} and system characteristics such as platform elasticity~\cite{kuhlenkamp_benchmarking_2020}. 
 While the number of contributions has risen considerably over the last few years, 
 a~review by \textcite{kuhlenkamp_benchmarking_2018} identified a number of challenges both in regards to workload and problem formulation, 
 as well as metrics analyzed, that have still not been sufficiently evaluated.
 
-While recent works\cites{kuhlenkamp_benchmarking_2020,van_eyk_beyond_2020} have made considerable strides towards addressing these issues, 
+While recent works~\cites{kuhlenkamp_benchmarking_2020,van_eyk_beyond_2020} have made considerable strides towards addressing these issues, 
 a~framework for both building and evaluating performance in FaaS-platforms has still not yet been established.
 
+\subsection{Document Structure}%
+\label{sub:introDocStructure}
 
+This document is split into four main parts: 
+
+Its first part covers the theoretical aspects and considerations which formed the framework (\Cref{chap:DesignPrinciples}).
+The second part explains our two demo applications, which were build around that framework and can be used for FaaS benchmarking
+(\Cref{chap:DemoApplications}).
+Afterwards, there is a chapter dedicated to the theoretical foundation of our data analysis tools (\Cref{chap:analysis}).
+The last part is a practical usage guide, which explains in detail how to setup and use this project,
+including data export and data analysis.
+For people that are only interested in using the software it is thus sufficient to read \Cref{chap:UsageGuide}.
 
 
 
